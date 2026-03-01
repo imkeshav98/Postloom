@@ -13,6 +13,7 @@ interface HomeProps {
 export async function generateMetadata(): Promise<Metadata> {
   const blog = await getBlogConfig();
   const url = blog.domain ? `https://${blog.domain}` : undefined;
+  const ogImageUrl = blog.siteConfig?.ogImageUrl;
 
   return {
     title: blog.name,
@@ -22,6 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: blog.description ?? undefined,
       url,
       type: "website",
+      ...(ogImageUrl && { images: [{ url: ogImageUrl, width: 1200, height: 630 }] }),
     },
     alternates: { canonical: url },
   };
@@ -56,8 +58,18 @@ export default async function HomePage({ searchParams }: HomeProps) {
       />
 
       {/* Hero section */}
-      <section className="relative overflow-hidden px-4 pb-14 pt-32 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden px-4 pb-6 pt-32 sm:px-6 lg:px-8">
+        {blog.siteConfig?.heroImageUrl && (
+          <>
+            <img
+              src={blog.siteConfig.heroImageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-surface/40 to-surface" />
+          </>
+        )}
+        <div className="relative mx-auto max-w-7xl">
           <div className="animate-fade-in mb-12 text-center">
             <p className="mb-3 text-sm font-medium uppercase tracking-widest text-primary">
               Welcome to

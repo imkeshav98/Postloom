@@ -205,6 +205,39 @@ export async function getTag(slug: string) {
   });
 }
 
+// ─── Single page (about, privacy, etc.) ──────────────────────────────────
+
+export async function getPage(slug: string) {
+  const id = blogId();
+  const fn = unstable_cache(
+    async (s: string) => {
+      return prisma.page.findUnique({
+        where: { blogId_slug: { blogId: id, slug: s } },
+      });
+    },
+    ["page", id, slug],
+    { tags: [`page-${slug}`, "pages"], revalidate: 3600 },
+  );
+  return fn(slug);
+}
+
+// ─── All page slugs (for sitemap) ────────────────────────────────────────
+
+export async function getAllPageSlugs() {
+  const id = blogId();
+  const fn = unstable_cache(
+    async () => {
+      return prisma.page.findMany({
+        where: { blogId: id },
+        select: { slug: true, updatedAt: true },
+      });
+    },
+    ["all-page-slugs", id],
+    { tags: ["pages"], revalidate: 3600 },
+  );
+  return fn();
+}
+
 // ─── All slugs (for sitemap) ───────────────────────────────────────────────
 
 export async function getAllPostSlugs() {

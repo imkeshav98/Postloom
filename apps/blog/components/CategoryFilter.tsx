@@ -24,10 +24,10 @@ export function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) 
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2 overflow-hidden">
       <button
         onClick={() => handleClick()}
-        className={`shrink-0 rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+        className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
           !activeSlug
             ? "bg-primary-fill text-white"
             : "border border-edge text-muted hover:border-primary hover:text-primary"
@@ -40,7 +40,7 @@ export function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) 
         <button
           key={cat.id}
           onClick={() => handleClick(cat.slug)}
-          className={`shrink-0 rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+          className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
             activeSlug === cat.slug
               ? "bg-primary-fill text-white"
               : "border border-edge text-muted hover:border-primary hover:text-primary"

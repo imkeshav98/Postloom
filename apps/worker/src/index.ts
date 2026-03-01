@@ -6,7 +6,7 @@ import { prisma } from "@autoblog/database";
 import type { PipelineRun } from "@autoblog/database";
 import { executeRun, registerStep } from "./executor.js";
 import { classifyError, calculateBackoff, shouldRetry } from "./retry.js";
-import { registerResearchSteps, registerGenerationSteps, registerPublishingSteps } from "@autoblog/ai-engine";
+import { registerResearchSteps, registerGenerationSteps, registerPublishingSteps, registerSetupSteps } from "@autoblog/ai-engine";
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 
@@ -16,6 +16,7 @@ const HEARTBEAT_INTERVAL_MS = 60_000; // Update lockedAt every 60 seconds
 
 // ─── Register AI pipeline steps ─────────────────────────────────────────────
 
+registerSetupSteps(registerStep);
 registerResearchSteps(registerStep);
 registerGenerationSteps(registerStep);
 registerPublishingSteps(registerStep);

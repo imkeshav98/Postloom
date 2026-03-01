@@ -18,10 +18,15 @@ import { internalLinking } from "./pipeline/steps/08-internal-linking.js";
 import { seoOptimization } from "./pipeline/steps/09-seo-optimization.js";
 import { publishing } from "./pipeline/steps/10-publishing.js";
 import { performanceMonitoring } from "./pipeline/steps/11-performance-monitoring.js";
+import { setupCategories } from "./pipeline/steps/setup-01-categories.js";
+import { setupPages } from "./pipeline/steps/setup-02-pages.js";
+import { setupImages } from "./pipeline/steps/setup-03-images.js";
+import { setupSeo } from "./pipeline/steps/setup-04-seo.js";
 
 export { nicheAnalysis, keywordResearch, trendDiscovery };
 export { contentPlanning, topicClustering, articleWriting, imageGeneration, internalLinking, seoOptimization };
 export { publishing, performanceMonitoring };
+export { setupCategories, setupPages, setupImages, setupSeo };
 
 // ─── Registration helpers ──────────────────────────────────────────────────
 // Called by the worker to register pipeline steps.
@@ -58,6 +63,21 @@ export function registerGenerationSteps(registerStep: RegisterStepFn): void {
   );
   registerStep(seoOptimization.stepName, (input, ctx) =>
     seoOptimization.execute(input as any, ctx),
+  );
+}
+
+export function registerSetupSteps(registerStep: RegisterStepFn): void {
+  registerStep(setupCategories.stepName, (input, ctx) =>
+    setupCategories.execute(input as any, ctx),
+  );
+  registerStep(setupPages.stepName, (input, ctx) =>
+    setupPages.execute(input as any, ctx),
+  );
+  registerStep(setupImages.stepName, (input, ctx) =>
+    setupImages.execute(input as any, ctx),
+  );
+  registerStep(setupSeo.stepName, (input, ctx) =>
+    setupSeo.execute(input as any, ctx),
   );
 }
 

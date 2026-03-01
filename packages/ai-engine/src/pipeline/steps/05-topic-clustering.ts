@@ -51,7 +51,6 @@ export type TopicClusteringOutput = z.infer<typeof outputSchema>;
 interface AITopicClusterResponse {
   categoryName: string;
   categorySlug: string;
-  isNewCategory: boolean;
   isPillar: boolean;
   clusterGroup: string;
   reasoning: string;
@@ -70,6 +69,13 @@ async function execute(
     where: { blogId: context.blogId },
     include: { _count: { select: { posts: true } } },
   });
+
+  if (categories.length === 0) {
+    throw new Error(
+      `No categories exist for blog ${context.blogId}. ` +
+      `Run the SETUP pipeline first to create categories before generating posts.`,
+    );
+  }
 
   const existingCategories = categories.map((c) => ({
     name: c.name,
@@ -96,37 +102,21 @@ async function execute(
     jsonSchema: topicClusteringSchema,
   });
 
-  // Create or find category — retry-safe for concurrent inserts
-  let category;
-  try {
-    category = await prisma.category.upsert({
-      where: {
-        blogId_slug: { blogId: context.blogId, slug: result.categorySlug },
-      },
-      update: {},
-      create: {
-        blogId: context.blogId,
-        name: result.categoryName,
-        slug: result.categorySlug,
-        isPillar: result.isPillar,
-      },
-    });
-  } catch {
-    // Race condition: another job created it between our check and insert
-    const existing = await prisma.category.findUnique({
-      where: {
-        blogId_slug: { blogId: context.blogId, slug: result.categorySlug },
-      },
-    });
-    if (!existing) throw new Error(`Category "${result.categorySlug}" not found after upsert failure`);
-    category = existing;
+  // Look up existing category — SETUP pipeline must have created categories first
+  const category = await prisma.category.findUnique({
+    where: {
+      blogId_slug: { blogId: context.blogId, slug: result.categorySlug },
+    },
+  });
+
+  if (!category) {
+    throw new Error(
+      `AI selected category "${result.categorySlug}" which does not exist. ` +
+      `Available categories: [${existingCategories.map((c) => c.slug).join(", ")}].`,
+    );
   }
 
-  if (result.isNewCategory) {
-    console.log(`    [Topic Clustering] Created/found category: "${category.name}"`);
-  } else {
-    console.log(`    [Topic Clustering] Assigned to existing category: "${category.name}"`);
-  }
+  console.log(`    [Topic Clustering] Assigned to category: "${category.name}"`);
 
   // Update ContentPlan with cluster info
   await prisma.contentPlan.update({

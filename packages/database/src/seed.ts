@@ -24,6 +24,7 @@ async function main() {
   await prisma.contentPlan.deleteMany();
   await prisma.keyword.deleteMany();
   await prisma.post.deleteMany();
+  await prisma.page.deleteMany();
   await prisma.category.deleteMany();
   await prisma.tag.deleteMany();
   await prisma.siteConfig.deleteMany();
@@ -84,7 +85,22 @@ async function main() {
 
   console.log(`${keywords.length} keywords created.`);
 
-  // ── 4. Enqueue 10 GENERATE pipeline jobs ──────────────────────────────
+  // ── 4. Enqueue SETUP pipeline (runs first, creates categories + pages) ──
+
+  await prisma.pipelineRun.create({
+    data: {
+      blogId: blog.id,
+      type: "SETUP",
+      status: "QUEUED",
+      priority: 10,
+      idempotencyKey: `seed-setup-${blog.id}`,
+      input: { niche: blog.niche },
+    },
+  });
+
+  console.log("1 SETUP pipeline job enqueued (priority 10, runs first).");
+
+  // ── 5. Enqueue 10 GENERATE pipeline jobs ──────────────────────────────
 
   for (let i = 0; i < 10; i++) {
     await prisma.pipelineRun.create({

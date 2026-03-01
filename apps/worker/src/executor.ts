@@ -27,6 +27,12 @@ export function registerStep(name: string, fn: StepFn): void {
 // Maps to the 11-step AI pipeline from the plan.
 
 const PIPELINE_STEPS: Record<PipelineRunType, string[]> = {
+  SETUP: [
+    "setup-categories",
+    "setup-pages",
+    "setup-images",
+    "setup-seo",
+  ],
   RESEARCH: ["niche-analysis", "keyword-research", "trend-discovery"],
   GENERATE: [
     "content-planning",

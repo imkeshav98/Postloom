@@ -29,12 +29,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const blog = await safeGetBlogConfig();
   if (!blog) return { title: "Blog" };
 
+  const faviconUrl = blog.siteConfig?.faviconUrl;
+  const ogImageUrl = blog.siteConfig?.ogImageUrl;
+
   return {
     title: {
       default: blog.name,
       template: `%s | ${blog.name}`,
     },
     description: blog.description ?? undefined,
+    icons: faviconUrl ? { icon: faviconUrl } : undefined,
+    openGraph: {
+      siteName: blog.name,
+      ...(ogImageUrl && { images: [{ url: ogImageUrl, width: 1200, height: 630 }] }),
+    },
   };
 }
 
@@ -60,7 +68,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${poppins.variable} font-sans antialiased`}>
-        <Header blogName={blog?.name ?? "Blog"} />
+        <Header blogName={blog?.name ?? "Blog"} logoUrl={blog?.logoUrl} />
         <main className="min-h-screen">{children}</main>
         <Footer
           blog={blog ?? ({ name: "Blog" } as Blog)}

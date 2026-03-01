@@ -117,6 +117,8 @@ export interface ImageGenOptions {
   model: string;
   prompt: string;
   fallbackModel?: string;
+  aspectRatio?: string;  // e.g. "1:1", "16:9" — defaults to "16:9"
+  imageSize?: string;    // e.g. "1K", "2K" — defaults to "2K"
 }
 
 // Image-only models use modalities: ["image"], multimodal use ["image", "text"]
@@ -125,19 +127,22 @@ const IMAGE_ONLY_MODELS = ["black-forest-labs/", "bytedance-seed/", "sourceful/"
 const FALLBACK_IMAGE_MODEL = "sourceful/riverflow-v2-pro";
 
 export async function generateImage(options: ImageGenOptions): Promise<Buffer> {
+  const imgCfg = { aspectRatio: options.aspectRatio, imageSize: options.imageSize };
   try {
-    return await callImageAPIWithRetry(options.model, options.prompt);
+    return await callImageAPIWithRetry(options.model, options.prompt, imgCfg);
   } catch (err) {
     const fallback = options.fallbackModel ?? FALLBACK_IMAGE_MODEL;
     console.log(`    [Image Generation] ${options.model} failed, falling back to ${fallback}`);
-    return await callImageAPIWithRetry(fallback, options.prompt);
+    return await callImageAPIWithRetry(fallback, options.prompt, imgCfg);
   }
 }
 
-async function callImageAPIWithRetry(model: string, prompt: string, maxRetries = 4): Promise<Buffer> {
+interface ImageConfig { aspectRatio?: string; imageSize?: string }
+
+async function callImageAPIWithRetry(model: string, prompt: string, imgCfg?: ImageConfig, maxRetries = 4): Promise<Buffer> {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      return await callImageAPI(model, prompt);
+      return await callImageAPI(model, prompt, imgCfg);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       const isRateLimit = /429|rate.?limit|too many requests/i.test(msg);
@@ -154,7 +159,7 @@ async function callImageAPIWithRetry(model: string, prompt: string, maxRetries =
   throw new Error("Unreachable");
 }
 
-async function callImageAPI(model: string, prompt: string): Promise<Buffer> {
+async function callImageAPI(model: string, prompt: string, imgCfg?: ImageConfig): Promise<Buffer> {
   const isImageOnly = IMAGE_ONLY_MODELS.some((p) => model.startsWith(p));
 
   const response = await getClient().chat.send({
@@ -162,7 +167,7 @@ async function callImageAPI(model: string, prompt: string): Promise<Buffer> {
       model,
       messages: [{ role: "user", content: prompt }],
       modalities: isImageOnly ? ["image"] : ["image", "text"],
-      imageConfig: { aspect_ratio: "16:9", image_size: "2K" },
+      imageConfig: { aspect_ratio: imgCfg?.aspectRatio ?? "16:9", image_size: imgCfg?.imageSize ?? "2K" },
     },
     xTitle: "AutoBlog Worker",
   });
