@@ -1,4 +1,5 @@
 services:
+  # ─── Database ─────────────────────────────────────────────────────────────
   db:
     image: postgres:17-alpine
     restart: unless-stopped
@@ -6,10 +7,75 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: postloom
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ─── Admin Dashboard ──────────────────────────────────────────────────────
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@db:5432/postloom?schema=public
+      SESSION_SECRET: ${SESSION_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@postloom.com}
+
+  # ─── Background Worker ────────────────────────────────────────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@db:5432/postloom?schema=public
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+
+  # ─── Blog (default instance) ──────────────────────────────────────────────
+  # Duplicate this block for each blog domain. Change BLOG_ID and add a
+  # matching server block in nginx/default.conf.
+  blog:
+    build:
+      context: .
+      dockerfile: apps/blog/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://blog_reader:${BLOG_READER_PASSWORD:-blog_reader_password}@db:5432/postloom?schema=public
+      BLOG_ID: ${BLOG_ID}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+
+  # ─── Nginx Reverse Proxy ──────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - admin
+      - blog
 
 volumes:
   pgdata:

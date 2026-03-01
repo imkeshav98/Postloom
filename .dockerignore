@@ -1,0 +1,15 @@
+node_modules
+.next
+dist
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+*.md
+!pnpm-workspace.yaml
+.playwright-mcp
+.claude
+.vscode
+.turbo
+apps/admin/tsconfig.tsbuildinfo
