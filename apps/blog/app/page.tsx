@@ -56,15 +56,13 @@ export default async function HomePage({ searchParams }: HomeProps) {
       />
 
       {/* Hero section */}
-      <section className="relative overflow-hidden bg-hero px-4 pb-10 pt-28 sm:px-6 lg:px-8">
-        {/* Decorative gradient orb */}
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/6 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="animate-fade-in mb-10 text-center">
+      <section className="relative overflow-hidden px-4 pb-14 pt-32 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="animate-fade-in mb-12 text-center">
             <p className="mb-3 text-sm font-medium uppercase tracking-widest text-primary">
               Welcome to
             </p>
-            <h1 className="mb-4 text-4xl font-bold text-content md:text-5xl lg:text-6xl">
+            <h1 className="mb-5 text-4xl font-bold text-content md:text-5xl lg:text-6xl">
               {blog.name}
             </h1>
             {blog.description && (
@@ -86,7 +84,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
 
       {/* Featured post */}
       {featuredPost && (
-        <section className="px-4 pt-10 sm:px-6 lg:px-8">
+        <section className="px-4 pt-16 sm:px-6 lg:px-8">
           <div className="animate-fade-in-up mx-auto max-w-7xl">
             <FeaturedPost post={featuredPost} />
           </div>
@@ -94,12 +92,12 @@ export default async function HomePage({ searchParams }: HomeProps) {
       )}
 
       {/* Post grid */}
-      <section className="px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+      <section className="px-4 pb-20 pt-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {gridPosts.length > 0 && (
-            <div className="mb-8 flex items-center gap-4">
-              <h2 className="text-lg font-semibold text-content">Latest Articles</h2>
-              <div className="h-px flex-1 bg-edge" />
+            <div className="section-heading">
+              <h2>Latest Articles</h2>
+              <p>Explore our most recent stories and insights</p>
             </div>
           )}
           {gridPosts.length > 0 ? (
@@ -121,7 +119,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </div>
           )}
 
-          <div className="mt-14">
+          <div className="mt-16">
             <Pagination
               currentPage={page}
               totalPages={totalPages}

@@ -21,10 +21,10 @@ export function PostCard({ post, author }: PostCardProps) {
     : null;
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-edge/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
+    <article className="group overflow-hidden rounded-3xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
       <Link href={`/${post.slug}`} className="block">
         {/* Thumbnail */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-hero">
+        <div className="relative aspect-[4/3] overflow-hidden bg-hero">
           {thumbnail ? (
             <Image
               src={thumbnail.url}
@@ -52,11 +52,11 @@ export function PostCard({ post, author }: PostCardProps) {
         </div>
 
         {/* Card body */}
-        <div className="p-5">
+        <div className="p-6">
           {/* Category + Date row */}
-          <div className="mb-2.5 flex items-center justify-between text-xs">
+          <div className="mb-3 flex items-center justify-between text-xs">
             {post.category ? (
-              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 font-medium text-primary">
+              <span className="rounded-full border border-primary/30 px-3 py-1 font-medium text-primary">
                 {post.category.name}
               </span>
             ) : (

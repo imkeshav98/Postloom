@@ -21,16 +21,16 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
 
   return (
     <Link href={`/${post.slug}`} className="group block">
-      <div className="overflow-hidden rounded-2xl shadow-lg shadow-primary/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/12">
+      <div className="overflow-hidden rounded-3xl shadow-lg shadow-primary/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/12">
         <div className="grid md:grid-cols-[1fr_1.2fr]">
-          {/* Green text panel */}
-          <div className="flex flex-col justify-center bg-primary-fill px-8 py-10 md:px-10 md:py-14">
+          {/* Text panel */}
+          <div className="flex flex-col justify-center bg-primary-fill px-8 py-10 md:px-12 md:py-16">
             {post.category && (
-              <span className="mb-4 text-xs font-medium uppercase tracking-widest text-white/60">
+              <span className="mb-4 inline-block w-fit rounded-full border border-white/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-white/80">
                 {post.category.name}
               </span>
             )}
-            <h2 className="mb-4 text-2xl font-bold leading-tight text-white md:text-3xl lg:text-4xl">
+            <h2 className="mb-4 text-2xl font-bold leading-tight text-white md:text-3xl lg:text-[2.75rem] lg:leading-[1.15]">
               {post.title}
             </h2>
             {post.excerpt && (
@@ -38,12 +38,12 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                 {post.excerpt}
               </p>
             )}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {date && (
                 <time className="text-xs text-white/50">{date}</time>
               )}
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white/90 transition-all duration-300 group-hover:gap-2.5">
-                Read more
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white/90 transition-all duration-300 group-hover:gap-2.5 group-hover:border-white/50">
+                Read article
                 <svg
                   width="14"
                   height="14"
@@ -62,7 +62,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
           </div>
 
           {/* Image side */}
-          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[340px]">
+          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[380px]">
             {thumbnail ? (
               <Image
                 src={thumbnail.url}

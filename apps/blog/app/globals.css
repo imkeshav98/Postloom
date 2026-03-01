@@ -377,3 +377,70 @@ html {
 details[open] > summary ~ * {
   animation: fade-in 0.25s ease-out;
 }
+
+/* ─── Section heading (Google Labs style, centered) */
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-heading h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--site-text);
+  margin-bottom: 0.5rem;
+}
+
+.section-heading p {
+  font-size: 0.95rem;
+  color: var(--site-text-muted);
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .section-heading h2 {
+    font-size: 2rem;
+  }
+}
+
+/* ─── Outline button (Google Labs style) */
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--site-border);
+  color: var(--site-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--site-primary);
+  color: var(--site-primary);
+  background: color-mix(in srgb, var(--site-primary) 5%, transparent);
+}
+
+.btn-outline-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--site-primary);
+  color: var(--site-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+  background: color-mix(in srgb, var(--site-primary) 10%, transparent);
+}

@@ -127,14 +127,14 @@ export default async function PostPage({ params }: PostPageProps) {
       {faqItems.length > 0 && <JsonLd data={faqSchema(faqItems)} />}
 
       {/* Post header */}
-      <header className="animate-fade-in px-4 pt-28 sm:px-6 lg:px-8">
+      <header className="animate-fade-in px-4 pt-32 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           {/* Breadcrumb-style meta */}
           <div className="mb-5 flex items-center justify-center gap-3 text-sm text-muted">
             {post.category && (
               <Link
                 href={`/category/${post.category.slug}`}
-                className="rounded-full bg-accent/10 px-3 py-0.5 font-medium text-accent transition-colors hover:bg-accent/15"
+                className="rounded-full border border-accent/40 px-3 py-1 font-medium text-accent transition-colors hover:bg-accent/5"
               >
                 {post.category.name}
               </Link>
@@ -166,7 +166,7 @@ export default async function PostPage({ params }: PostPageProps) {
       {/* Featured image */}
       {thumbnail && (
         <div className="animate-fade-in-up px-4 sm:px-6 lg:px-8">
-          <div className="relative mx-auto aspect-video max-w-5xl overflow-hidden rounded-2xl shadow-lg shadow-black/8">
+          <div className="relative mx-auto aspect-video max-w-5xl overflow-hidden rounded-3xl shadow-lg shadow-black/8">
             <Image
               src={thumbnail.url}
               alt={thumbnail.altText}
@@ -180,7 +180,7 @@ export default async function PostPage({ params }: PostPageProps) {
       )}
 
       {/* Content + Sidebar */}
-      <div className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="px-4 py-14 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_300px]">
           {/* Main content */}
           <article className="animate-fade-in">
@@ -205,7 +205,7 @@ export default async function PostPage({ params }: PostPageProps) {
             )}
 
             {/* Author */}
-            <div className="mt-10 rounded-xl border border-edge bg-surface-alt/30 p-5">
+            <div className="mt-10 rounded-2xl border border-edge/60 bg-surface-alt/30 p-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-fill text-sm font-bold text-white">
                   {blog.defaultAuthor.charAt(0)}

@@ -36,10 +36,10 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
   const { posts, totalPages } = await getPostsByTag(slug, page, perPage);
 
   return (
-    <section className="px-4 pb-14 pt-28 sm:px-6 lg:px-8">
+    <section className="px-4 pb-16 pt-32 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="animate-fade-in mb-10">
+        <div className="animate-fade-in mb-12">
           <div className="mb-4 flex items-center gap-2 text-sm text-muted">
             <Link href="/" className="transition-colors hover:text-accent">
               Home

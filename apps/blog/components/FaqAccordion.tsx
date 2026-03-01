@@ -20,7 +20,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
         </svg>
         Frequently Asked Questions
       </h2>
-      <div className="overflow-hidden rounded-xl border border-edge">
+      <div className="overflow-hidden rounded-2xl border border-edge/60">
         {items.map((item, i) => (
           <details key={i} className="group border-b border-edge last:border-b-0">
             <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-left text-[15px] font-medium text-content transition-colors hover:bg-surface-alt/50 hover:text-primary [&::-webkit-details-marker]:hidden">

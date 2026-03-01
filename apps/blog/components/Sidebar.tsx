@@ -10,7 +10,7 @@ interface SidebarProps {
 
 export function Sidebar({ relatedPosts, author, adsenseSlot }: SidebarProps) {
   return (
-    <aside className="space-y-6 lg:sticky lg:top-20">
+    <aside className="space-y-6 lg:sticky lg:top-24">
       {/* AdSense slot */}
       {adsenseSlot && (
         <div
@@ -34,7 +34,7 @@ export function Sidebar({ relatedPosts, author, adsenseSlot }: SidebarProps) {
                   href={`/${post.slug}`}
                   className="group flex gap-3"
                 >
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-hero">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-hero">
                     {thumb ? (
                       <Image
                         src={thumb.url}

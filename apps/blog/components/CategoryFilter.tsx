@@ -24,33 +24,31 @@ export function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) 
   }
 
   return (
-    <div className="rounded-xl bg-primary-fill px-2 py-2">
-      <div className="flex gap-1 overflow-x-auto scrollbar-none">
+    <div className="flex flex-wrap justify-center gap-2">
+      <button
+        onClick={() => handleClick()}
+        className={`shrink-0 rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+          !activeSlug
+            ? "bg-primary-fill text-white"
+            : "border border-edge text-muted hover:border-primary hover:text-primary"
+        }`}
+      >
+        All
+      </button>
+
+      {categories.map((cat) => (
         <button
-          onClick={() => handleClick()}
-          className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
-            !activeSlug
-              ? "bg-white/15 text-white"
-              : "text-white/60 hover:text-white/90"
+          key={cat.id}
+          onClick={() => handleClick(cat.slug)}
+          className={`shrink-0 rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+            activeSlug === cat.slug
+              ? "bg-primary-fill text-white"
+              : "border border-edge text-muted hover:border-primary hover:text-primary"
           }`}
         >
-          All
+          {cat.name}
         </button>
-
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => handleClick(cat.slug)}
-            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
-              activeSlug === cat.slug
-                ? "bg-white/15 text-white"
-                : "text-white/60 hover:text-white/90"
-            }`}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
