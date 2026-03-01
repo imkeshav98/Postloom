@@ -1,0 +1,46 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build outputs
+dist/
+.next/
+out/
+
+# turbo
+.turbo/
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# prisma
+packages/database/prisma/migrations/
+packages/database/src/generated/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# docker
+docker-compose.override.yml
+
+# screenshots
+*.png
+
+# playwright
+.playwright-mcp/
+
+#AI
+.claude

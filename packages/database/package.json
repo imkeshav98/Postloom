@@ -1,0 +1,29 @@
+{
+  "name": "@autoblog/database",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx src/seed.ts",
+    "db:studio": "prisma studio",
+    "db:setup-roles": "tsx src/setup-roles.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
+    "pg": "^8.19.0"
+  },
+  "devDependencies": {
+    "@autoblog/tsconfig": "workspace:*",
+    "@types/node": "^25.3.3",
+    "@types/pg": "^8.18.0",
+    "cloudinary": "^2.9.0",
+    "dotenv": "^16.4.7",
+    "prisma": "^7.4.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  }
+}

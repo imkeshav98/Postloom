@@ -1,0 +1,15 @@
+{
+  "name": "@autoblog/shared",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@autoblog/database": "workspace:*",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@autoblog/tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

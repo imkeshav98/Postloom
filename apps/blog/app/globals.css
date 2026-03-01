@@ -1,0 +1,379 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ─── Color Palette Presets ────────────────────────────────────
+   Switch palette by adding data-palette to <html>:
+     (default)                      → Slate + Indigo
+     <html data-palette="coral">    → Warm Coral + Orange
+     <html data-palette="emerald">  → Minimal Emerald + Sky
+     <html data-palette="teal">     → Warm Sand + Teal
+
+   Dark mode:  <html data-theme="dark">
+   Combine:    <html data-theme="dark" data-palette="coral">
+
+   Override individual colors via layout.tsx inline styles
+   (--site-primary, --site-accent) or SiteConfig in the database.
+*/
+
+/* ═══ Default: Slate + Indigo ═══ */
+
+:root {
+  --site-primary: #4f46e5;
+  --site-primary-fill: #4f46e5;
+  --site-accent: #7c3aed;
+  --site-bg: #f8fafc;
+  --site-bg-alt: #f1f5f9;
+  --site-text: #0f172a;
+  --site-text-muted: #64748b;
+  --site-border: #e2e8f0;
+  --site-card: #ffffff;
+  --site-hero-bg: #eef2f7;
+}
+
+[data-theme="dark"] {
+  --site-primary: #818cf8;
+  --site-primary-fill: #4f46e5;
+  --site-accent: #a78bfa;
+  --site-bg: #0b0d13;
+  --site-bg-alt: #141724;
+  --site-text: #e2e8f0;
+  --site-text-muted: #94a3b8;
+  --site-border: rgba(255, 255, 255, 0.08);
+  --site-card: #161a28;
+  --site-hero-bg: #0f1119;
+}
+
+/* ═══ Coral Palette ═══ */
+
+[data-palette="coral"] {
+  --site-primary: #ea580c;
+  --site-primary-fill: #ea580c;
+  --site-accent: #dc2626;
+  --site-bg: #fafaf9;
+  --site-bg-alt: #f5f5f4;
+  --site-text: #1c1917;
+  --site-text-muted: #78716c;
+  --site-border: #e7e5e4;
+  --site-card: #ffffff;
+  --site-hero-bg: #f0eeec;
+}
+
+[data-theme="dark"][data-palette="coral"] {
+  --site-primary: #fb923c;
+  --site-primary-fill: #ea580c;
+  --site-accent: #f87171;
+  --site-bg: #0c0a09;
+  --site-bg-alt: #1a1816;
+  --site-text: #e7e5e4;
+  --site-text-muted: #a8a29e;
+  --site-border: rgba(255, 255, 255, 0.08);
+  --site-card: #1c1a17;
+  --site-hero-bg: #12100e;
+}
+
+/* ═══ Emerald Palette ═══ */
+
+[data-palette="emerald"] {
+  --site-primary: #059669;
+  --site-primary-fill: #059669;
+  --site-accent: #0284c7;
+  --site-bg: #ffffff;
+  --site-bg-alt: #f8fafc;
+  --site-text: #111827;
+  --site-text-muted: #6b7280;
+  --site-border: #f3f4f6;
+  --site-card: #f9fafb;
+  --site-hero-bg: #f3f4f6;
+}
+
+[data-theme="dark"][data-palette="emerald"] {
+  --site-primary: #34d399;
+  --site-primary-fill: #059669;
+  --site-accent: #38bdf8;
+  --site-bg: #0a0a0b;
+  --site-bg-alt: #111113;
+  --site-text: #f3f4f6;
+  --site-text-muted: #9ca3af;
+  --site-border: rgba(255, 255, 255, 0.06);
+  --site-card: #141416;
+  --site-hero-bg: #0e0e10;
+}
+
+/* ═══ Teal Palette ═══ */
+
+[data-palette="teal"] {
+  --site-primary: #0f766e;
+  --site-primary-fill: #0f766e;
+  --site-accent: #b45309;
+  --site-bg: #faf8f5;
+  --site-bg-alt: #f3f0eb;
+  --site-text: #1a1a1a;
+  --site-text-muted: #737373;
+  --site-border: #e8e5e0;
+  --site-card: #ffffff;
+  --site-hero-bg: #efe9e0;
+}
+
+[data-theme="dark"][data-palette="teal"] {
+  --site-primary: #2dd4bf;
+  --site-primary-fill: #0f766e;
+  --site-accent: #fbbf24;
+  --site-bg: #0c0c0a;
+  --site-bg-alt: #15150f;
+  --site-text: #e8e5e0;
+  --site-text-muted: #a3a3a3;
+  --site-border: rgba(255, 255, 255, 0.07);
+  --site-card: #1a1a16;
+  --site-hero-bg: #111110;
+}
+
+/* ─── Tailwind tokens */
+
+@theme inline {
+  --color-primary: var(--site-primary);
+  --color-primary-fill: var(--site-primary-fill);
+  --color-accent: var(--site-accent);
+  --color-surface: var(--site-bg);
+  --color-surface-alt: var(--site-bg-alt);
+  --color-content: var(--site-text);
+  --color-muted: var(--site-text-muted);
+  --color-edge: var(--site-border);
+  --color-card: var(--site-card);
+  --color-hero: var(--site-hero-bg);
+  --font-sans: var(--font-poppins);
+  --font-serif: var(--font-poppins);
+}
+
+/* ─── Base */
+
+body {
+  background-color: var(--site-bg);
+  color: var(--site-text);
+}
+
+/* ─── Animations (CSS-only, GPU-accelerated) */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+/* Stagger grid children */
+.stagger-children > * {
+  animation: fade-in-up 0.5s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 480ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 560ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 640ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .stagger-children > * {
+    animation: none !important;
+  }
+}
+
+/* ─── Prose (article content) */
+
+.prose {
+  --tw-prose-body: var(--site-text);
+  --tw-prose-headings: var(--site-text);
+  --tw-prose-links: var(--site-accent);
+  --tw-prose-bold: var(--site-text);
+  --tw-prose-quotes: var(--site-text-muted);
+  --tw-prose-code: var(--site-text);
+  --tw-prose-hr: var(--site-border);
+  --tw-prose-th-borders: var(--site-border);
+  --tw-prose-td-borders: var(--site-border);
+}
+
+[data-theme="dark"] .prose {
+  --tw-prose-headings: var(--site-text);
+  --tw-prose-body: var(--site-text);
+  --tw-prose-bold: var(--site-text);
+  --tw-prose-quotes: var(--site-text-muted);
+  --tw-prose-code: var(--site-text);
+}
+
+/* Prose headings */
+.prose :where(h2) {
+  position: relative;
+  padding-left: 1rem;
+  border-left: 3px solid var(--site-primary);
+}
+
+/* Prose links */
+.prose :where(a) {
+  text-decoration-color: color-mix(in srgb, var(--site-accent) 40%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.prose :where(a):hover {
+  text-decoration-color: var(--site-accent);
+}
+
+/* Prose blockquotes */
+.prose :where(blockquote) {
+  border-left: 3px solid var(--site-primary);
+  background: var(--site-bg-alt);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.25rem;
+  font-style: normal;
+}
+
+/* Prose horizontal rules */
+.prose :where(hr) {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--site-border), transparent);
+  margin: 2.5rem 0;
+}
+
+/* Prose tables */
+.prose :where(table) {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid var(--site-border);
+  width: 100%;
+}
+
+.prose :where(thead) {
+  background: var(--site-bg-alt);
+}
+
+.prose :where(th) {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--site-text-muted);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.prose :where(td) {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--site-border);
+  font-size: 0.9rem;
+  color: var(--site-text);
+}
+
+.prose :where(tbody tr:last-child td) {
+  border-bottom: none;
+}
+
+.prose :where(tbody tr):hover {
+  background: color-mix(in srgb, var(--site-primary) 4%, transparent);
+}
+
+/* Prose inline code */
+.prose :where(code:not(pre code)) {
+  background: var(--site-bg-alt);
+  color: var(--site-text);
+  padding: 0.15em 0.4em;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  border: 1px solid var(--site-border);
+}
+
+/* Prose code blocks */
+.prose :where(pre) {
+  background: var(--site-bg-alt) !important;
+  color: var(--site-text);
+  border: 1px solid var(--site-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+/* Prose images */
+.prose :where(img) {
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Prose list markers */
+.prose :where(ul > li)::marker {
+  color: var(--site-primary);
+}
+.prose :where(ol > li)::marker {
+  color: var(--site-primary);
+  font-weight: 600;
+}
+
+/* ─── Scrollbar */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--site-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--site-text-muted); }
+
+/* ─── Selection */
+
+::selection {
+  background: color-mix(in srgb, var(--site-accent) 25%, transparent);
+  color: var(--site-text);
+}
+
+/* ─── Theme transition */
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Focus styles */
+
+:focus-visible {
+  outline: 2px solid var(--site-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Smooth scroll */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─── Responsive table wrapper */
+
+.prose :where(table) {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Utilities */
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+details[open] > summary ~ * {
+  animation: fade-in 0.25s ease-out;
+}

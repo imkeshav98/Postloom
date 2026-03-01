@@ -1,0 +1,21 @@
+{
+  "name": "@autoblog/worker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test:enqueue": "tsx src/test-enqueue.ts"
+  },
+  "dependencies": {
+    "@autoblog/database": "workspace:*",
+    "@autoblog/ai-engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@autoblog/tsconfig": "workspace:*",
+    "dotenv": "^16.4.7",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,353 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Blog ────────────────────────────────────────────────────────────────────
+
+model Blog {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  domain        String?  @unique
+  niche         String
+  description   String?
+  logoUrl       String?
+  adsenseId     String?
+  defaultAuthor String   @default("Admin")
+  language      String   @default("en")
+  aiConfig      Json?
+
+  categories   Category[]
+  posts        Post[]
+  tags         Tag[]
+  keywords     Keyword[]
+  contentPlans ContentPlan[]
+  siteConfig   SiteConfig?
+  pipelineRuns PipelineRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Category (hub-and-spoke) ────────────────────────────────────────────────
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String
+  description String?
+  isPillar    Boolean    @default(false)
+
+  parentId String?
+  parent   Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("SubCategories")
+
+  blogId String
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  posts  Post[]
+
+  @@unique([blogId, slug])
+}
+
+// ─── Post ────────────────────────────────────────────────────────────────────
+
+model Post {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String
+  contentMarkdown String
+  contentHtml     String?
+  excerpt         String?
+
+  // SEO
+  metaTitle         String?
+  metaDescription   String?
+  canonicalUrl      String?
+  focusKeyword      String?
+  secondaryKeywords String[]
+  readingTime       Int?
+  wordCount         Int?
+  faqData           Json?
+
+  // Status
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  scheduledAt DateTime?
+
+  // AI metadata
+  aiGenerated     Boolean @default(true)
+  aiModel         String?
+  aiPromptVersion String?
+  humanEdited     Boolean @default(false)
+
+  // Relations
+  blogId     String
+  blog       Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  tags           Tag[]
+  images         Image[]
+  affiliateLinks AffiliateLink[]
+  performance    PostPerformance[]
+  outgoingLinks  InternalLink[]    @relation("SourcePost")
+  incomingLinks  InternalLink[]    @relation("TargetPost")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([blogId, slug])
+  @@index([blogId, status])
+  @@index([blogId, publishedAt])
+}
+
+enum PostStatus {
+  DRAFT
+  REVIEWING
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+// ─── Tag ─────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String
+  slug  String
+  blogId String
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  posts Post[]
+
+  @@unique([blogId, slug])
+}
+
+// ─── Keyword ─────────────────────────────────────────────────────────────────
+
+model Keyword {
+  id           String        @id @default(cuid())
+  keyword      String
+  searchVolume Int?
+  difficulty   Float?
+  cpc          Float?
+  intent       SearchIntent?
+  trendScore   Float?
+  trendData    Json?
+
+  blogId       String
+  blog         Blog          @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  contentPlans ContentPlan[]
+
+  lastResearched DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@unique([blogId, keyword])
+  @@index([blogId, searchVolume])
+}
+
+enum SearchIntent {
+  INFORMATIONAL
+  NAVIGATIONAL
+  TRANSACTIONAL
+  COMMERCIAL
+}
+
+// ─── Content Plan ────────────────────────────────────────────────────────────
+
+model ContentPlan {
+  id              String     @id @default(cuid())
+  title           String
+  outline         Json?
+  targetKeywordId String?
+  targetKeyword   Keyword?   @relation(fields: [targetKeywordId], references: [id], onDelete: SetNull)
+  priority        Int        @default(0)
+  status          PlanStatus @default(PLANNED)
+  clusterGroup    String?
+  isHub           Boolean    @default(false)
+
+  blogId String
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PlanStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+// ─── Internal Link ───────────────────────────────────────────────────────────
+// DB trigger enforces same-blog constraint (see setup-roles.ts)
+
+model InternalLink {
+  id           String @id @default(cuid())
+  sourcePostId String
+  sourcePost   Post   @relation("SourcePost", fields: [sourcePostId], references: [id], onDelete: Cascade)
+  targetPostId String
+  targetPost   Post   @relation("TargetPost", fields: [targetPostId], references: [id], onDelete: Cascade)
+  anchorText   String
+  context      String?
+
+  @@unique([sourcePostId, targetPostId])
+}
+
+// ─── Post Performance ────────────────────────────────────────────────────────
+
+model PostPerformance {
+  id             String   @id @default(cuid())
+  postId         String
+  post           Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  date           DateTime @default(now())
+  pageViews      Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  avgTimeOnPage  Float?
+  bounceRate     Float?
+  googlePosition Float?
+  impressions    Int?
+  clicks         Int?
+  ctr            Float?
+
+  @@index([postId, date])
+}
+
+// ─── Image ───────────────────────────────────────────────────────────────────
+
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  altText   String
+  prompt    String
+  width     Int?
+  height    Int?
+  format    String   @default("png")
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// ─── Affiliate Link ──────────────────────────────────────────────────────────
+
+model AffiliateLink {
+  id         String @id @default(cuid())
+  url        String
+  anchorText String
+  platform   String
+  postId     String
+  post       Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+// ─── Site Config ─────────────────────────────────────────────────────────────
+
+model SiteConfig {
+  id                     String  @id @default(cuid())
+  blogId                 String  @unique
+  blog                   Blog    @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  palette                String  @default("default")
+  googleAnalyticsId      String?
+  googleSearchConsoleKey String?
+  twitterHandle          String?
+  facebookUrl            String?
+  postsPerPage           Int     @default(10)
+  enableComments         Boolean @default(false)
+  adsenseSlots           Json?
+  affiliateConfig        Json?
+}
+
+// ─── Admin ───────────────────────────────────────────────────────────────────
+
+model AdminUser {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  isActive     Boolean        @default(true)
+  sessions     AdminSession[]
+  pipelineRuns PipelineRun[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+}
+
+// ─── Pipeline ────────────────────────────────────────────────────────────────
+
+model PipelineRun {
+  id             String            @id @default(cuid())
+  blogId         String
+  blog           Blog              @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  type           PipelineRunType
+  status         PipelineRunStatus @default(QUEUED)
+  priority       Int               @default(0)
+  idempotencyKey String            @unique
+
+  requestedById String?
+  requestedBy   AdminUser? @relation(fields: [requestedById], references: [id], onDelete: SetNull)
+
+  input       Json
+  result      Json?
+  error       Json?
+  attempts    Int      @default(0)
+  maxAttempts Int      @default(6)
+  lockedAt    DateTime?
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+
+  steps PipelineStepRun[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, priority])
+}
+
+enum PipelineRunType {
+  RESEARCH
+  GENERATE
+  BATCH
+  OPTIMIZE
+}
+
+enum PipelineRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+model PipelineStepRun {
+  id            String             @id @default(cuid())
+  pipelineRunId String
+  pipelineRun   PipelineRun        @relation(fields: [pipelineRunId], references: [id], onDelete: Cascade)
+  stepName      String
+  status        PipelineStepStatus @default(PENDING)
+  input         Json?
+  output        Json?
+  error         Json?
+  durationMs    Int?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+enum PipelineStepStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+  SKIPPED
+}
