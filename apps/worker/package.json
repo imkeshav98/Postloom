@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@postloom/database": "workspace:*",
-    "@postloom/ai-engine": "workspace:*"
+    "@postloom/ai-engine": "workspace:*",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "@postloom/tsconfig": "workspace:*",
-    "dotenv": "^16.4.7",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3"
   }

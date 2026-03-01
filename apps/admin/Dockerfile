@@ -19,18 +19,19 @@ RUN pnpm install --frozen-lockfile
 # ─── Builder ──────────────────────────────────────────────────────────────
 FROM base AS builder
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/admin/node_modules ./apps/admin/node_modules
-COPY --from=deps /app/packages ./packages
-
-# Copy source + workspace config
+# Copy source + workspace config first
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/admin ./apps/admin
 COPY packages ./packages
 COPY turbo.json ./
 
-# Generate Prisma client
-RUN pnpm --filter @postloom/database db:generate
+# Then overlay node_modules from deps (so they don't get overwritten)
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/admin/node_modules ./apps/admin/node_modules
+COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
+
+# Generate Prisma client (dummy URL — only needed for codegen, not a real connection)
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm --filter @postloom/database db:generate
 
 # Build the admin app (standalone output for Docker)
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -51,7 +52,6 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy standalone output
 COPY --from=builder /app/apps/admin/.next/standalone ./
 COPY --from=builder /app/apps/admin/.next/static ./apps/admin/.next/static
-COPY --from=builder /app/apps/admin/public ./apps/admin/public/
 
 USER nextjs
 
