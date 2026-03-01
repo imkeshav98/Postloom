@@ -23,11 +23,6 @@ import { setupPages } from "./pipeline/steps/setup-02-pages.js";
 import { setupImages } from "./pipeline/steps/setup-03-images.js";
 import { setupSeo } from "./pipeline/steps/setup-04-seo.js";
 
-export { nicheAnalysis, keywordResearch, trendDiscovery };
-export { contentPlanning, topicClustering, articleWriting, imageGeneration, internalLinking, seoOptimization };
-export { publishing, performanceMonitoring };
-export { setupCategories, setupPages, setupImages, setupSeo };
-
 // ─── Registration helpers ──────────────────────────────────────────────────
 // Called by the worker to register pipeline steps.
 

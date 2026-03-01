@@ -221,23 +221,6 @@ export async function getPage(slug: string) {
   return fn(slug);
 }
 
-// ─── All page slugs (for sitemap) ────────────────────────────────────────
-
-export async function getAllPageSlugs() {
-  const id = blogId();
-  const fn = unstable_cache(
-    async () => {
-      return prisma.page.findMany({
-        where: { blogId: id },
-        select: { slug: true, updatedAt: true },
-      });
-    },
-    ["all-page-slugs", id],
-    { tags: ["pages"], revalidate: 3600 },
-  );
-  return fn();
-}
-
 // ─── All slugs (for sitemap) ───────────────────────────────────────────────
 
 export async function getAllPostSlugs() {
