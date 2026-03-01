@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: autoblog
+      POSTGRES_DB: postloom
     volumes:
       - pgdata:/var/lib/postgresql/data
 

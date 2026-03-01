@@ -1,12 +1,12 @@
-// env.ts MUST be the first import — it loads .env before @autoblog/database
+// env.ts MUST be the first import — it loads .env before @postloom/database
 // reads process.env.DATABASE_URL
 import "./env.js";
 
-import { prisma } from "@autoblog/database";
-import type { PipelineRun } from "@autoblog/database";
+import { prisma } from "@postloom/database";
+import type { PipelineRun } from "@postloom/database";
 import { executeRun, registerStep } from "./executor.js";
 import { classifyError, calculateBackoff, shouldRetry } from "./retry.js";
-import { registerResearchSteps, registerGenerationSteps, registerPublishingSteps, registerSetupSteps } from "@autoblog/ai-engine";
+import { registerResearchSteps, registerGenerationSteps, registerPublishingSteps, registerSetupSteps } from "@postloom/ai-engine";
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 

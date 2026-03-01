@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Blog, Category } from "@autoblog/database";
+import type { Blog, Category } from "@postloom/database";
 
 interface FooterProps {
   blog: Blog;

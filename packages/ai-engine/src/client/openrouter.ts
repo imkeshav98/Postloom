@@ -54,7 +54,7 @@ export async function chat(options: ChatOptions): Promise<string> {
 
   const response = await getClient().chat.send({
     chatGenerationParams: params,
-    xTitle: "AutoBlog Worker",
+    xTitle: "Postloom Worker",
   });
 
   // Non-streaming returns ChatResponse (not EventStream)
@@ -169,7 +169,7 @@ async function callImageAPI(model: string, prompt: string, imgCfg?: ImageConfig)
       modalities: isImageOnly ? ["image"] : ["image", "text"],
       imageConfig: { aspect_ratio: imgCfg?.aspectRatio ?? "16:9", image_size: imgCfg?.imageSize ?? "2K" },
     },
-    xTitle: "AutoBlog Worker",
+    xTitle: "Postloom Worker",
   });
 
   if (!("choices" in response)) {

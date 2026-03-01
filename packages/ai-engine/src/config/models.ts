@@ -1,4 +1,4 @@
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 
 // ─── Model config types ────────────────────────────────────────────────────
 

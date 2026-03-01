@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { Blog, Category, SiteConfig } from "@autoblog/database";
+import type { Blog, Category, SiteConfig } from "@postloom/database";
 import { Poppins } from "next/font/google";
 import { getBlogConfig } from "@/lib/data";
 import { Header } from "@/components/Header";

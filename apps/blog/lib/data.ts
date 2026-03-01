@@ -1,4 +1,4 @@
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 import { unstable_cache } from "next/cache";
 
 function blogId(): string {

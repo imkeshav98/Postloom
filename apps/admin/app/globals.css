@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is([data-theme="dark"], [data-theme="dark"] *));
+
+/* ─── Color Palette (same as blog, Slate + Indigo for admin) ─── */
+
+:root {
+  --site-primary: #4f46e5;
+  --site-primary-fill: #4f46e5;
+  --site-accent: #7c3aed;
+  --site-bg: #f8fafc;
+  --site-bg-alt: #f1f5f9;
+  --site-text: #0f172a;
+  --site-text-muted: #64748b;
+  --site-border: #e2e8f0;
+  --site-card: #ffffff;
+  --site-hero-bg: #eef2f7;
+}
+
+[data-theme="dark"] {
+  --site-primary: #818cf8;
+  --site-primary-fill: #6366f1;
+  --site-accent: #a78bfa;
+  --site-bg: #0b0d13;
+  --site-bg-alt: #141724;
+  --site-text: #e2e8f0;
+  --site-text-muted: #94a3b8;
+  --site-border: rgba(255, 255, 255, 0.14);
+  --site-card: #161a28;
+  --site-hero-bg: #0f1119;
+}
+
+/* ─── Tailwind tokens (our palette + shadcn compatibility) */
+
+@theme inline {
+  /* Our palette tokens */
+  --color-primary: var(--site-primary);
+  --color-primary-fill: var(--site-primary-fill);
+  --color-accent: var(--site-accent);
+  --color-surface: var(--site-bg);
+  --color-surface-alt: var(--site-bg-alt);
+  --color-content: var(--site-text);
+  --color-muted: var(--site-bg-alt);
+  --color-edge: var(--site-border);
+  --color-card: var(--site-card);
+  --color-hero: var(--site-hero-bg);
+  --font-sans: var(--font-poppins);
+
+  /* shadcn/ui tokens */
+  --color-background: var(--site-bg);
+  --color-foreground: var(--site-text);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--site-bg-alt);
+  --color-secondary-foreground: var(--site-text);
+  --color-muted-foreground: var(--site-text-muted);
+  --color-accent-foreground: var(--site-text);
+  --color-card-foreground: var(--site-text);
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--site-border);
+  --color-input: var(--site-border);
+  --color-ring: var(--site-primary);
+  --color-popover: var(--site-card);
+  --color-popover-foreground: var(--site-text);
+  --radius: 0.5rem;
+}
+
+/* ─── Base */
+
+body {
+  background-color: var(--site-bg);
+  color: var(--site-text);
+}
+
+/* ─── Animations */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none !important;
+  }
+}
+
+/* ─── Scrollbar */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--site-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--site-text-muted); }
+
+/* ─── Selection */
+
+::selection {
+  background: color-mix(in srgb, var(--site-accent) 25%, transparent);
+  color: var(--site-text);
+}
+
+/* ─── Theme transition */
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Focus styles */
+
+:focus-visible {
+  outline: 2px solid var(--site-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar-none utility */
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

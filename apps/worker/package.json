@@ -1,5 +1,5 @@
 {
-  "name": "@autoblog/worker",
+  "name": "@postloom/worker",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -9,11 +9,11 @@
     "test:enqueue": "tsx src/test-enqueue.ts"
   },
   "dependencies": {
-    "@autoblog/database": "workspace:*",
-    "@autoblog/ai-engine": "workspace:*"
+    "@postloom/database": "workspace:*",
+    "@postloom/ai-engine": "workspace:*"
   },
   "devDependencies": {
-    "@autoblog/tsconfig": "workspace:*",
+    "@postloom/tsconfig": "workspace:*",
     "dotenv": "^16.4.7",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3"

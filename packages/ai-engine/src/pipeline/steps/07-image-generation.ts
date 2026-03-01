@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 import { v2 as cloudinary } from "cloudinary";
 import { generateImage } from "../../client/openrouter.js";
 import { getModelConfig } from "../../config/models.js";
@@ -72,7 +72,7 @@ async function execute(
   });
 
   // Upload to Cloudinary
-  const publicId = `autoblog/${context.blogId}/${input.slug}-thumbnail`;
+  const publicId = `postloom/${context.blogId}/${input.slug}-thumbnail`;
 
   const uploadResult = await new Promise<{ secure_url: string; width: number; height: number; format: string }>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(

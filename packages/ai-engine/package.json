@@ -1,5 +1,5 @@
 {
-  "name": "@autoblog/ai-engine",
+  "name": "@postloom/ai-engine",
   "private": true,
   "version": "0.0.0",
   "main": "./src/index.ts",
@@ -8,13 +8,13 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@autoblog/database": "workspace:*",
+    "@postloom/database": "workspace:*",
     "@openrouter/sdk": "^0.9.11",
     "cloudinary": "^2.9.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@autoblog/tsconfig": "workspace:*",
+    "@postloom/tsconfig": "workspace:*",
     "typescript": "^5.9.3"
   }
 }

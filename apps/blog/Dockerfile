@@ -23,17 +23,18 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/blog/node_modules ./apps/blog/node_modules
 COPY --from=deps /app/packages ./packages
 
-# Copy source
+# Copy source + workspace config
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/blog ./apps/blog
 COPY packages ./packages
 COPY turbo.json ./
 
 # Generate Prisma client
-RUN pnpm --filter @autoblog/database db:generate
+RUN pnpm --filter @postloom/database db:generate
 
 # Build the blog app
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @autoblog/blog build
+RUN pnpm --filter @postloom/blog build
 
 # ─── Runner ───────────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
@@ -49,7 +50,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy standalone output
 COPY --from=builder /app/apps/blog/.next/standalone ./
 COPY --from=builder /app/apps/blog/.next/static ./apps/blog/.next/static
-COPY --from=builder /app/apps/blog/public ./apps/blog/public 2>/dev/null || true
+COPY --from=builder /app/apps/blog/public ./apps/blog/public/
 
 USER nextjs
 

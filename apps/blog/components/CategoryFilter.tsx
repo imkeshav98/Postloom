@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import type { Category } from "@autoblog/database";
+import type { Category } from "@postloom/database";
 
 interface CategoryFilterProps {
   categories: Category[];

@@ -1,8 +1,8 @@
-# AutoBlog — Implementation Plan
+# Postloom — Implementation Plan
 
 ## What This Is
 
-AutoBlog is an AI-powered platform that manages multiple niche blog websites from a single codebase. It handles keyword research, content writing, image generation, internal linking, SEO optimization, and publishing — all automated. The goal is to generate passive income through Google AdSense and affiliate links by ranking blog posts on Google.
+Postloom is an AI-powered platform that manages multiple niche blog websites from a single codebase. It handles keyword research, content writing, image generation, internal linking, SEO optimization, and publishing — all automated. The goal is to generate passive income through Google AdSense and affiliate links by ranking blog posts on Google.
 
 ---
 
@@ -40,7 +40,7 @@ Three apps share one PostgreSQL database, deployed together on a single VPS usin
 ## Monorepo Structure
 
 ```
-AutoBlog/
+Postloom/
 ├── apps/
 │   ├── blog/                         # Public blog (deployed per domain)
 │   │   ├── app/

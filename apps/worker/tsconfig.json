@@ -1,5 +1,5 @@
 {
-  "extends": "@autoblog/tsconfig/library.json",
+  "extends": "@postloom/tsconfig/library.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",

@@ -1,5 +1,5 @@
 import "./env.js";
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 
 async function main() {
   // Get the most recent AI-generated draft post with SEO metadata
@@ -54,7 +54,7 @@ async function main() {
   // Show image file path
   if (post.images.length > 0) {
     const imgUrl = post.images[0].url;
-    const fullPath = `c:/Users/imkes/Desktop/Personal/AutoBlog${imgUrl.replace(/\//g, "/")}`;
+    const fullPath = `c:/Users/imkes/Desktop/Personal/Postloom${imgUrl.replace(/\//g, "/")}`;
     console.log(`\n=== IMAGE FILE PATH ===`);
     console.log(fullPath);
   }

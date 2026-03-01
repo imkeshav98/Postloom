@@ -1,5 +1,5 @@
 {
-  "name": "@autoblog/tsconfig",
+  "name": "@postloom/tsconfig",
   "private": true,
   "files": ["base.json", "nextjs.json", "library.json"]
 }

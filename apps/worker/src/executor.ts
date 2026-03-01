@@ -1,5 +1,5 @@
-import { prisma } from "@autoblog/database";
-import type { PipelineRun, PipelineRunType } from "@autoblog/database";
+import { prisma } from "@postloom/database";
+import type { PipelineRun, PipelineRunType } from "@postloom/database";
 
 // ─── Step contract ──────────────────────────────────────────────────────────
 

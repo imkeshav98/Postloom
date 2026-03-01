@@ -1,19 +1,20 @@
 {
-  "name": "autoblog",
+  "name": "postloom",
   "private": true,
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "db:generate": "pnpm --filter @autoblog/database db:generate",
-    "db:push": "pnpm --filter @autoblog/database db:push",
-    "db:seed": "pnpm --filter @autoblog/database db:seed",
-    "db:studio": "pnpm --filter @autoblog/database db:studio",
-    "db:setup-roles": "pnpm --filter @autoblog/database db:setup-roles",
-    "worker:dev": "pnpm --filter @autoblog/worker dev",
-    "worker:test-enqueue": "pnpm --filter @autoblog/worker test:enqueue",
-    "blog:dev": "pnpm --filter @autoblog/blog dev"
+    "db:generate": "pnpm --filter @postloom/database db:generate",
+    "db:push": "pnpm --filter @postloom/database db:push",
+    "db:seed": "pnpm --filter @postloom/database db:seed",
+    "db:studio": "pnpm --filter @postloom/database db:studio",
+    "db:setup-roles": "pnpm --filter @postloom/database db:setup-roles",
+    "worker:dev": "pnpm --filter @postloom/worker dev",
+    "worker:test-enqueue": "pnpm --filter @postloom/worker test:enqueue",
+    "blog:dev": "pnpm --filter @postloom/blog dev",
+    "admin:dev": "pnpm --filter @postloom/admin dev"
   },
   "devDependencies": {
     "turbo": "^2.8.12",

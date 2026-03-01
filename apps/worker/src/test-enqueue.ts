@@ -1,10 +1,10 @@
 // Test script: enqueues a pipeline job for the worker to pick up.
-// Usage: pnpm --filter @autoblog/worker test:enqueue
+// Usage: pnpm --filter @postloom/worker test:enqueue
 // Pass "generate" as an argument to enqueue a GENERATE job instead of RESEARCH.
 
 import "./env.js";
 
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 
 async function main() {
   const jobType = process.argv[2]?.toUpperCase() === "GENERATE" ? "GENERATE" : "RESEARCH";
@@ -72,7 +72,7 @@ async function main() {
     console.log(`  Status: ${run.status}`);
   }
 
-  console.log(`\nStart the worker to process it: pnpm --filter @autoblog/worker dev`);
+  console.log(`\nStart the worker to process it: pnpm --filter @postloom/worker dev`);
 
   await prisma.$disconnect();
 }

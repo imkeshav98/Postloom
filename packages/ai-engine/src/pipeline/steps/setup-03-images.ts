@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 import { v2 as cloudinary } from "cloudinary";
 import { generateImage } from "../../client/openrouter.js";
 import { getModelConfig } from "../../config/models.js";
@@ -96,12 +96,12 @@ async function execute(
   });
   const logoResult = await uploadToCloudinary(
     logoBuffer,
-    `autoblog/${context.blogId}/logo`,
+    `postloom/${context.blogId}/logo`,
   );
   console.log(`    [Setup Images] Logo uploaded: ${logoResult.secure_url}`);
 
   // 2. Favicon (use logo with Cloudinary resize transformation)
-  const faviconUrl = cloudinary.url(`autoblog/${context.blogId}/logo`, {
+  const faviconUrl = cloudinary.url(`postloom/${context.blogId}/logo`, {
     width: 32,
     height: 32,
     crop: "fill",
@@ -118,7 +118,7 @@ async function execute(
   });
   const ogResult = await uploadToCloudinary(
     ogBuffer,
-    `autoblog/${context.blogId}/og-image`,
+    `postloom/${context.blogId}/og-image`,
   );
   console.log(`    [Setup Images] OG image uploaded: ${ogResult.secure_url}`);
 
@@ -130,7 +130,7 @@ async function execute(
   });
   const heroResult = await uploadToCloudinary(
     heroBuffer,
-    `autoblog/${context.blogId}/hero`,
+    `postloom/${context.blogId}/hero`,
   );
   console.log(`    [Setup Images] Hero image uploaded: ${heroResult.secure_url}`);
 

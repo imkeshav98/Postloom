@@ -21,4 +21,4 @@ export type {
   PipelineRunType,
   PipelineRunStatus,
   PipelineStepStatus,
-} from "@autoblog/database";
+} from "@postloom/database";

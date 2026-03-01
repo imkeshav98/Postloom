@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: process.env.DOCKER ? "standalone" : undefined,
-  transpilePackages: ["@autoblog/database", "@autoblog/shared"],
+  transpilePackages: ["@postloom/database", "@postloom/shared"],
   serverExternalPackages: ["pg"],
   images: {
     remotePatterns: [

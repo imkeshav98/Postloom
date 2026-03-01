@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import dotenv from "dotenv";
 import pg from "pg";
+import bcrypt from "bcryptjs";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 
@@ -17,6 +18,7 @@ async function main() {
   console.log("Clearing database...\n");
 
   // ── 0. Clear all data (order matters for FK constraints) ──────────────
+  await prisma.adminSession.deleteMany();
   await prisma.pipelineStepRun.deleteMany();
   await prisma.pipelineRun.deleteMany();
   await prisma.internalLink.deleteMany();
@@ -117,8 +119,21 @@ async function main() {
 
   console.log("10 GENERATE pipeline jobs enqueued.");
 
+  // ── 6. Create admin user ────────────────────────────────────────────────
+
+  await prisma.adminUser.deleteMany();
+  const passwordHash = await bcrypt.hash("admin123", 12);
+  const admin = await prisma.adminUser.create({
+    data: {
+      email: "admin@postloom.com",
+      passwordHash,
+    },
+  });
+
+  console.log(`Admin user created: ${admin.email} (password: admin123)`);
+
   console.log(`\nSeed complete! Blog ID: ${blog.id}`);
-  console.log("Start the worker to generate posts: pnpm --filter @autoblog/worker dev");
+  console.log("Start the worker to generate posts: pnpm --filter @postloom/worker dev");
 }
 
 main()

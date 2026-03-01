@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Post, Category, Image as DbImage } from "@autoblog/database";
+import type { Post, Category, Image as DbImage } from "@postloom/database";
 
 interface SidebarProps {
   relatedPosts: (Post & { category: Category | null; images: DbImage[] })[];

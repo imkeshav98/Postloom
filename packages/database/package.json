@@ -1,5 +1,5 @@
 {
-  "name": "@autoblog/database",
+  "name": "@postloom/database",
   "private": true,
   "version": "0.0.0",
   "main": "./src/index.ts",
@@ -17,8 +17,10 @@
     "pg": "^8.19.0"
   },
   "devDependencies": {
-    "@autoblog/tsconfig": "workspace:*",
+    "@postloom/tsconfig": "workspace:*",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^25.3.3",
+    "bcryptjs": "^3.0.2",
     "@types/pg": "^8.18.0",
     "cloudinary": "^2.9.0",
     "dotenv": "^16.4.7",

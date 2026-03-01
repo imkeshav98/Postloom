@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 import type { PipelineStep, StepContext } from "../types.js";
 import type { PublishingOutput } from "./10-publishing.js";
 

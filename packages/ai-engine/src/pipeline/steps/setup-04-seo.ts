@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@autoblog/database";
+import { prisma } from "@postloom/database";
 import { chatJSON } from "../../client/openrouter.js";
 import { getModelConfig } from "../../config/models.js";
 import {
