@@ -70,7 +70,7 @@ export function setSessionCookie(token: string) {
     name: SESSION_COOKIE,
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.SECURE_COOKIES === "true",
     sameSite: "lax" as const,
     path: "/",
     maxAge: SESSION_DURATION_MS / 1000,
