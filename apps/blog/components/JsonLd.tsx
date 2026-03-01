@@ -80,6 +80,27 @@ export function faqSchema(
   };
 }
 
+export function collectionPageSchema(page: {
+  name: string;
+  description: string;
+  url: string;
+  blogName: string;
+  blogUrl: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: page.name,
+    description: page.description,
+    url: page.url,
+    isPartOf: {
+      "@type": "WebSite",
+      name: page.blogName,
+      url: page.blogUrl,
+    },
+  };
+}
+
 export function organizationSchema(blog: {
   name: string;
   url: string;

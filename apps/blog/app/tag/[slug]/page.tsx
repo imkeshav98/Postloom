@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getBlogConfig, getPostsByTag, getTag } from "@/lib/data";
 import { PostCard } from "@/components/PostCard";
 import { Pagination } from "@/components/Pagination";
+import { JsonLd, collectionPageSchema, breadcrumbSchema } from "@/components/JsonLd";
 
 interface TagPageProps {
   params: Promise<{ slug: string }>;
@@ -35,8 +36,27 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
   const perPage = blog.siteConfig?.postsPerPage ?? 9;
   const { posts, totalPages } = await getPostsByTag(slug, page, perPage);
 
+  const blogUrl = blog.domain
+    ? `https://${blog.domain}`
+    : `http://localhost:3000`;
+
   return (
     <section className="px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+      <JsonLd
+        data={collectionPageSchema({
+          name: `#${tag.name}`,
+          description: `Posts tagged with "${tag.name}" on ${blog.name}`,
+          url: `${blogUrl}/tag/${slug}`,
+          blogName: blog.name,
+          blogUrl,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", url: blogUrl },
+          { name: `#${tag.name}`, url: `${blogUrl}/tag/${slug}` },
+        ])}
+      />
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="animate-fade-in mb-12">
