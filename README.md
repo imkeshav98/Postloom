@@ -138,6 +138,9 @@ cp .env.example .env
 # Fill in your values (see Environment Variables below)
 docker compose build
 docker compose up -d
+
+# First time only: seed the database (creates admin user, schema, etc.)
+docker compose exec admin npx prisma db seed
 ```
 
 ### Nginx & Domains
@@ -175,8 +178,6 @@ When you configure HTTPS (e.g. Certbot, Cloudflare), set `SECURE_COOKIES=true` i
 | `BLOG_READER_PASSWORD` | docker-compose | Read-only DB role password |
 | `SESSION_SECRET` | admin | Session cookie signing key |
 | `SECURE_COOKIES` | admin | Set to `true` when using HTTPS |
-| `ADMIN_EMAIL` | admin | Admin login email |
-| `ADMIN_PASSWORD_HASH` | admin | Bcrypt hash of admin password |
 | `OPENROUTER_API_KEY` | worker | OpenRouter API key for AI models |
 | `CLOUDINARY_CLOUD_NAME` | worker | Cloudinary cloud name |
 | `CLOUDINARY_API_KEY` | worker | Cloudinary API key |
