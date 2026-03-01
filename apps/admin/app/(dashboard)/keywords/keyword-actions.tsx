@@ -73,24 +73,24 @@ export function KeywordActions({ blogs }: KeywordActionsProps) {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <form onSubmit={handleSearch} className="flex items-center gap-2">
-        <div className="relative">
+    <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+      <form onSubmit={handleSearch} className="flex min-w-0 flex-1 items-center gap-2 sm:flex-initial">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search keywords..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-64 pl-8"
+            className="w-full pl-8"
           />
         </div>
       </form>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">
+          <Button variant="outline" size="sm" className="shrink-0">
             <FlaskConical className="h-4 w-4" />
-            Run Research
+            <span className="hidden sm:inline">Run Research</span>
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -174,7 +174,7 @@ export function GenerateButton({ keywordId, blogId }: GenerateButtonProps) {
       className="h-7 gap-1 text-xs text-primary hover:text-primary"
     >
       <Sparkles className="h-3.5 w-3.5" />
-      {loading ? "Queuing..." : "Generate"}
+      <span className="hidden sm:inline">{loading ? "Queuing..." : "Generate"}</span>
     </Button>
   );
 }

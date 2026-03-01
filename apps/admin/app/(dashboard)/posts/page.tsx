@@ -50,13 +50,21 @@ export default async function PostsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-content">All Posts</h2>
-          <p className="text-sm text-muted-foreground">{total} post{total !== 1 ? "s" : ""}</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between sm:block">
+          <div>
+            <h2 className="text-xl font-bold text-content">All Posts</h2>
+            <p className="text-sm text-muted-foreground">{total} post{total !== 1 ? "s" : ""}</p>
+          </div>
+          <Link href="/posts/new" className="sm:hidden">
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              New Post
+            </Button>
+          </Link>
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/posts/new">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/posts/new" className="hidden sm:inline-flex">
             <Button size="sm">
               <Plus className="h-4 w-4" />
               New Post
@@ -111,7 +119,7 @@ export default async function PostsPage({
                     >
                       {post.status}
                     </Badge>
-                    <span className="whitespace-nowrap text-xs text-muted-foreground">
+                    <span className="hidden whitespace-nowrap text-xs text-muted-foreground sm:block">
                       {post.createdAt.toLocaleDateString()}
                     </span>
                   </div>

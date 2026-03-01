@@ -58,7 +58,7 @@ export default async function KeywordsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-bold text-content">Keywords</h2>
           <p className="text-sm text-muted-foreground">{total} keyword{total !== 1 ? "s" : ""}</p>
@@ -107,15 +107,15 @@ export default async function KeywordsPage({
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-edge/60 bg-surface-alt text-left dark:border-white/5">
-                    <th className="px-4 py-3 font-medium text-muted-foreground">Keyword</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">Blog</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground text-right">Volume</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground text-right">Difficulty</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground text-right">CPC</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">Intent</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground text-right">Trend</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">Status</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground"></th>
+                    <th className="px-2 py-3 font-medium text-muted-foreground sm:px-4">Keyword</th>
+                    <th className="hidden px-4 py-3 font-medium text-muted-foreground md:table-cell">Blog</th>
+                    <th className="px-2 py-3 font-medium text-muted-foreground text-right sm:px-4">Vol.</th>
+                    <th className="px-2 py-3 font-medium text-muted-foreground text-right sm:px-4">Diff.</th>
+                    <th className="hidden px-4 py-3 font-medium text-muted-foreground text-right lg:table-cell">CPC</th>
+                    <th className="hidden px-4 py-3 font-medium text-muted-foreground lg:table-cell">Intent</th>
+                    <th className="hidden px-4 py-3 font-medium text-muted-foreground text-right lg:table-cell">Trend</th>
+                    <th className="hidden px-4 py-3 font-medium text-muted-foreground sm:table-cell">Status</th>
+                    <th className="px-1 py-3 font-medium text-muted-foreground sm:px-4"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-edge/60 dark:divide-white/5">
@@ -124,26 +124,26 @@ export default async function KeywordsPage({
                     const isUsed = !!plan;
                     return (
                       <tr key={kw.id} className="transition-colors hover:bg-surface-alt">
-                        <td className="px-4 py-3 font-medium text-content">{kw.keyword}</td>
-                        <td className="px-4 py-3 text-muted-foreground">{kw.blog.name}</td>
-                        <td className="px-4 py-3 text-right text-content">
+                        <td className="px-2 py-3 font-medium text-content sm:px-4">{kw.keyword}</td>
+                        <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{kw.blog.name}</td>
+                        <td className="px-2 py-3 text-right text-content sm:px-4">
                           {kw.searchVolume?.toLocaleString() ?? "—"}
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-2 py-3 text-right sm:px-4">
                           <DifficultyBadge value={kw.difficulty} />
                         </td>
-                        <td className="px-4 py-3 text-right text-content">
+                        <td className="hidden px-4 py-3 text-right text-content lg:table-cell">
                           {kw.cpc != null ? `$${kw.cpc.toFixed(2)}` : "—"}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="hidden px-4 py-3 lg:table-cell">
                           <Badge variant="outline" className="text-xs">
                             {kw.intent ?? "—"}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-right text-content">
+                        <td className="hidden px-4 py-3 text-right text-content lg:table-cell">
                           {kw.trendScore != null ? `${Math.round(kw.trendScore * 100)}%` : "—"}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="hidden px-4 py-3 sm:table-cell">
                           {isUsed ? (
                             <Badge
                               variant="secondary"
@@ -160,7 +160,7 @@ export default async function KeywordsPage({
                             </Badge>
                           )}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-1 py-3 sm:px-4">
                           {!isUsed && (
                             <GenerateButton keywordId={kw.id} blogId={kw.blog.id} />
                           )}

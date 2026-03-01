@@ -62,10 +62,10 @@ export default async function PipelineDetailPage({
       </Link>
 
       {/* Run header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold text-content">{run.type} Run</h2>
+            <h2 className="text-xl font-bold text-content sm:text-2xl">{run.type} Run</h2>
             <Badge
               variant="secondary"
               className={statusColors[run.status] ?? ""}
@@ -77,9 +77,9 @@ export default async function PipelineDetailPage({
             {run.blog.name} · {run.blog.niche}
           </p>
         </div>
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3 sm:items-start">
           {run.status === "FAILED" && <RetryButton runId={run.id} />}
-          <div className="space-y-1 text-right text-xs text-muted-foreground">
+          <div className="space-y-1 text-left text-xs text-muted-foreground sm:text-right">
             <p>Created: {run.createdAt.toLocaleString()}</p>
             {run.startedAt && <p>Started: {run.startedAt.toLocaleString()}</p>}
             {run.finishedAt && <p>Finished: {run.finishedAt.toLocaleString()}</p>}

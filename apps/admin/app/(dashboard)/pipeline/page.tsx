@@ -86,7 +86,7 @@ export default async function PipelinePage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground sm:gap-4">
                     <span>{run._count.steps} steps</span>
                     {run.finishedAt && run.startedAt && (
                       <span>
@@ -96,7 +96,7 @@ export default async function PipelinePage() {
                         )}s
                       </span>
                     )}
-                    <span>
+                    <span className="hidden sm:block">
                       {run.createdAt.toLocaleDateString()}
                     </span>
                   </div>

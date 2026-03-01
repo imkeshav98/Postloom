@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow login page and auth API routes
+  // Allow public pages: landing page, login, and auth API routes
   if (
+    pathname === "/" ||
     pathname === "/login" ||
     pathname.startsWith("/api/auth/")
   ) {

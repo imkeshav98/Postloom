@@ -21,13 +21,13 @@
   --site-primary: #818cf8;
   --site-primary-fill: #6366f1;
   --site-accent: #a78bfa;
-  --site-bg: #0b0d13;
-  --site-bg-alt: #141724;
+  --site-bg: #0c0d11;
+  --site-bg-alt: #131417;
   --site-text: #e2e8f0;
   --site-text-muted: #94a3b8;
-  --site-border: rgba(255, 255, 255, 0.14);
-  --site-card: #161a28;
-  --site-hero-bg: #0f1119;
+  --site-border: rgba(255, 255, 255, 0.10);
+  --site-card: #18191e;
+  --site-hero-bg: #0f1013;
 }
 
 /* ─── Tailwind tokens (our palette + shadcn compatibility) */
