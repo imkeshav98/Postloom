@@ -28,10 +28,18 @@ export interface ChatOptions {
     name: string;
     schema: Record<string, unknown>;
   };
+  webSearch?: {
+    enabled: boolean;
+    searchPrompt?: string;
+    maxResults?: number;
+  };
+  reasoning?: {
+    effort: "low" | "medium" | "high";
+  };
 }
 
 export async function chat(options: ChatOptions): Promise<string> {
-  const { model, messages, temperature, maxTokens, jsonSchema } = options;
+  const { model, messages, temperature, maxTokens, jsonSchema, webSearch, reasoning } = options;
 
   const params: ChatGenerationParams = {
     model,
@@ -52,6 +60,21 @@ export async function chat(options: ChatOptions): Promise<string> {
     };
   }
 
+  // Enable web search plugin
+  if (webSearch?.enabled) {
+    params.plugins = [{
+      id: "web" as const,
+      enabled: true,
+      maxResults: webSearch.maxResults ?? 5,
+      searchPrompt: webSearch.searchPrompt,
+    }];
+  }
+
+  // Enable extended reasoning
+  if (reasoning) {
+    params.reasoning = { effort: reasoning.effort };
+  }
+
   const response = await getClient().chat.send({
     chatGenerationParams: params,
     xTitle: "Postloom Worker",
@@ -59,9 +82,17 @@ export async function chat(options: ChatOptions): Promise<string> {
 
   // Non-streaming returns ChatResponse (not EventStream)
   if ("choices" in response) {
-    const content = response.choices[0]?.message?.content;
+    const choice = response.choices[0];
+    const content = choice?.message?.content;
     if (!content || typeof content !== "string") {
       throw new Error(`Empty response from ${model}`);
+    }
+    // Detect truncated responses (hit maxTokens limit)
+    if (choice.finishReason === "length") {
+      throw new Error(
+        `Response from ${model} was truncated (finish_reason=length). ` +
+        `Increase maxTokens or reduce prompt size.`,
+      );
     }
     return content;
   }

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Clock, User } from "lucide-react";
+import { AutoRefresh } from "../auto-refresh";
+import { RetryButton } from "./retry-button";
 
 const statusColors: Record<string, string> = {
   QUEUED: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
@@ -46,8 +48,11 @@ export default async function PipelineDetailPage({
       ? Math.round((run.finishedAt.getTime() - run.startedAt.getTime()) / 1000)
       : null;
 
+  const isActive = run.status === "QUEUED" || run.status === "RUNNING";
+
   return (
     <div className="space-y-6">
+      <AutoRefresh active={isActive} />
       <Link
         href="/pipeline"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-content"
@@ -72,10 +77,13 @@ export default async function PipelineDetailPage({
             {run.blog.name} · {run.blog.niche}
           </p>
         </div>
-        <div className="space-y-1 text-right text-xs text-muted-foreground">
-          <p>Created: {run.createdAt.toLocaleString()}</p>
-          {run.startedAt && <p>Started: {run.startedAt.toLocaleString()}</p>}
-          {run.finishedAt && <p>Finished: {run.finishedAt.toLocaleString()}</p>}
+        <div className="flex items-start gap-3">
+          {run.status === "FAILED" && <RetryButton runId={run.id} />}
+          <div className="space-y-1 text-right text-xs text-muted-foreground">
+            <p>Created: {run.createdAt.toLocaleString()}</p>
+            {run.startedAt && <p>Started: {run.startedAt.toLocaleString()}</p>}
+            {run.finishedAt && <p>Finished: {run.finishedAt.toLocaleString()}</p>}
+          </div>
         </div>
       </div>
 

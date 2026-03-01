@@ -75,10 +75,10 @@ export async function DELETE(
 
   const { id } = await params;
 
-  // Get the post's slug so we can clean up links in other posts' content
+  // Get the post's slug and focusKeyword so we can clean up related data
   const post = await prisma.post.findUnique({
     where: { id },
-    select: { slug: true },
+    select: { slug: true, focusKeyword: true, blogId: true },
   });
 
   if (post) {
@@ -113,6 +113,19 @@ export async function DELETE(
           data: { contentMarkdown: cleaned },
         });
       }
+    }
+  }
+
+  // Delete associated ContentPlan so the keyword becomes available again
+  if (post?.focusKeyword) {
+    const keyword = await prisma.keyword.findUnique({
+      where: { blogId_keyword: { blogId: post.blogId, keyword: post.focusKeyword } },
+      select: { id: true },
+    });
+    if (keyword) {
+      await prisma.contentPlan.deleteMany({
+        where: { targetKeywordId: keyword.id, blogId: post.blogId },
+      });
     }
   }
 

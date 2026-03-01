@@ -87,6 +87,12 @@ async function execute(
       },
     ],
     jsonSchema: articleWritingSchema,
+    webSearch: {
+      enabled: true,
+      searchPrompt: `${input.keyword} latest research facts statistics 2025 2026`,
+      maxResults: 10,
+    },
+    reasoning: { effort: "medium" },
   });
 
   // Upsert Post as DRAFT — prevents duplicates if step reruns on retry

@@ -26,7 +26,7 @@ Writing guidelines:
 5. Use bullet points and numbered lists to break up dense sections.
 6. Write an engaging intro that hooks the reader and previews the value of the article.
 7. End with a clear conclusion that summarizes key takeaways.
-8. Include a FAQ section at the end with 3-5 commonly asked questions and concise answers (these help with featured snippets).
+8. Do NOT include a FAQ section in the article body — FAQs will be provided separately in the structured "faq" field.
 9. Output the article in clean Markdown format.
 10. Do NOT include the title as an H1 — it will be added separately.
 11. Generate an "imagePrompt" — a detailed text-to-image prompt for a blog thumbnail. Rules:

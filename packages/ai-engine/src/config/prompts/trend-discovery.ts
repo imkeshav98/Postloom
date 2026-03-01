@@ -1,20 +1,27 @@
 export function buildTrendDiscoveryPrompt(
   niche: string,
-  existingKeywords: string[],
+  nicheDescription: string,
+  contentGaps: string[],
+  recommendedTopics: string[],
 ): string {
   return `You are an expert trend analyst specializing in content marketing. Identify currently trending topics in the given niche that would make excellent blog content.
 
 Niche: "${niche}"
 
-Existing Keywords Already Researched:
-${existingKeywords.map((k) => `- ${k}`).join("\n")}
+Niche Profile:
+${nicheDescription}
+
+Content Gaps to Target:
+${contentGaps.map((g) => `- ${g}`).join("\n")}
+
+Recommended Topics:
+${recommendedTopics.map((t) => `- ${t}`).join("\n")}
 
 Your task:
 
 1. Identify 10-15 topics that are currently trending or gaining momentum in this niche.
 2. For each trend, provide a trend score (0.0 to 1.0, where 1.0 = extremely hot right now).
-3. Map each trend to any existing keywords it relates to.
-4. Suggest new keywords inspired by each trend.
+3. For each trend, suggest 3-5 specific keywords that would make good blog post targets.
 
 Consider:
 - Seasonal trends (time of year)
@@ -22,6 +29,7 @@ Consider:
 - Recent news or developments in the niche
 - Social media buzz topics
 - New products, techniques, or research in the field
+- The content gaps and recommended topics above — prioritize trends that align with these
 
 Return your response as JSON matching the exact schema provided.`;
 }
@@ -39,10 +47,6 @@ export const trendDiscoverySchema = {
             topic: { type: "string" as const },
             trendScore: { type: "number" as const },
             description: { type: "string" as const },
-            relatedKeywords: {
-              type: "array" as const,
-              items: { type: "string" as const },
-            },
             suggestedKeywords: {
               type: "array" as const,
               items: { type: "string" as const },
@@ -52,7 +56,6 @@ export const trendDiscoverySchema = {
             "topic",
             "trendScore",
             "description",
-            "relatedKeywords",
             "suggestedKeywords",
           ],
           additionalProperties: false,

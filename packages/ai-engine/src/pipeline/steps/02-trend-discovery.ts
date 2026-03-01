@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { prisma } from "@postloom/database";
 import { chatJSON } from "../../client/openrouter.js";
 import { getModelConfig } from "../../config/models.js";
 import {
@@ -7,30 +6,41 @@ import {
   trendDiscoverySchema,
 } from "../../config/prompts/trend-discovery.js";
 import type { PipelineStep, StepContext } from "../types.js";
-import type { KeywordResearchOutput } from "./02-keyword-research.js";
+import type { NicheAnalysisOutput } from "./01-niche-analysis.js";
 
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 const inputSchema = z.object({
   niche: z.string(),
-  keywords: z.array(z.object({ keyword: z.string() }).passthrough()),
+  nicheProfile: z.object({
+    description: z.string(),
+    marketSize: z.string(),
+    monetizationPotential: z.string(),
+  }),
+  contentGaps: z.array(z.object({ topic: z.string(), opportunity: z.string() })),
+  recommendedTopics: z.array(z.string()),
 }).passthrough();
 
 const trendSchema = z.object({
   topic: z.string(),
   trendScore: z.number(),
   description: z.string(),
-  relatedKeywords: z.array(z.string()),
   suggestedKeywords: z.array(z.string()),
 });
 
 const outputSchema = z.object({
   niche: z.string(),
+  nicheProfile: z.object({
+    description: z.string(),
+    marketSize: z.string(),
+    monetizationPotential: z.string(),
+  }),
+  contentGaps: z.array(z.object({ topic: z.string(), opportunity: z.string() })),
+  recommendedTopics: z.array(z.string()),
   trends: z.array(trendSchema),
-  keywordsUpdated: z.number(),
 });
 
-export type TrendDiscoveryInput = KeywordResearchOutput;
+export type TrendDiscoveryInput = NicheAnalysisOutput;
 export type TrendDiscoveryOutput = z.infer<typeof outputSchema>;
 
 // ─── AI response type ───────────────────────────────────────────────────────
@@ -40,7 +50,6 @@ interface AITrendResponse {
     topic: string;
     trendScore: number;
     description: string;
-    relatedKeywords: string[];
     suggestedKeywords: string[];
   }>;
 }
@@ -53,8 +62,6 @@ async function execute(
 ): Promise<TrendDiscoveryOutput> {
   const config = await getModelConfig(context.blogId);
 
-  const existingKeywords = input.keywords.map((k) => k.keyword);
-
   const result = await chatJSON<AITrendResponse>({
     model: config.research.model,
     temperature: config.research.temperature,
@@ -62,48 +69,35 @@ async function execute(
     messages: [
       {
         role: "user",
-        content: buildTrendDiscoveryPrompt(input.niche, existingKeywords),
+        content: buildTrendDiscoveryPrompt(
+          input.niche,
+          input.nicheProfile.description,
+          input.contentGaps.map((g) => g.topic),
+          input.recommendedTopics,
+        ),
       },
     ],
     jsonSchema: trendDiscoverySchema,
+    webSearch: {
+      enabled: true,
+      searchPrompt: `Trending ${input.niche} topics 2025 2026 viral popular emerging`,
+      maxResults: 10,
+    },
+    reasoning: { effort: "medium" },
   });
 
-  // Update trendScore and trendData for keywords that match trends
-  let updated = 0;
-  for (const trend of result.trends) {
-    for (const relatedKw of trend.relatedKeywords) {
-      // Find keyword in DB (case-insensitive match)
-      const keyword = await prisma.keyword.findFirst({
-        where: {
-          blogId: context.blogId,
-          keyword: { equals: relatedKw, mode: "insensitive" },
-        },
-      });
+  const totalSuggested = result.trends.reduce(
+    (sum, t) => sum + t.suggestedKeywords.length, 0,
+  );
+  console.log(`    [Trend Discovery] Found ${result.trends.length} trends with ${totalSuggested} suggested keywords`);
 
-      if (keyword) {
-        await prisma.keyword.update({
-          where: { id: keyword.id },
-          data: {
-            trendScore: trend.trendScore,
-            trendData: {
-              topic: trend.topic,
-              description: trend.description,
-              score: trend.trendScore,
-              discoveredAt: new Date().toISOString(),
-            },
-          },
-        });
-        updated++;
-      }
-    }
-  }
-
-  console.log(`    [Trend Discovery] Updated ${updated} keyword(s) with trend data`);
-
+  // Pass through niche data + add trends (purely analytical, no DB writes)
   return {
     niche: input.niche,
+    nicheProfile: input.nicheProfile,
+    contentGaps: input.contentGaps,
+    recommendedTopics: input.recommendedTopics,
     trends: result.trends,
-    keywordsUpdated: updated,
   };
 }
 

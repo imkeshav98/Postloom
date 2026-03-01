@@ -8,8 +8,8 @@ export type { PipelineStep, StepContext, RegisterStepFn } from "./pipeline/types
 // ─── Step implementations ───────────────────────────────────────────────────
 
 import { nicheAnalysis } from "./pipeline/steps/01-niche-analysis.js";
-import { keywordResearch } from "./pipeline/steps/02-keyword-research.js";
-import { trendDiscovery } from "./pipeline/steps/03-trend-discovery.js";
+import { trendDiscovery } from "./pipeline/steps/02-trend-discovery.js";
+import { keywordResearch } from "./pipeline/steps/03-keyword-research.js";
 import { contentPlanning } from "./pipeline/steps/04-content-planning.js";
 import { topicClustering } from "./pipeline/steps/05-topic-clustering.js";
 import { articleWriting } from "./pipeline/steps/06-article-writing.js";
@@ -32,11 +32,11 @@ export function registerResearchSteps(registerStep: RegisterStepFn): void {
   registerStep(nicheAnalysis.stepName, (input, ctx) =>
     nicheAnalysis.execute(input as any, ctx),
   );
-  registerStep(keywordResearch.stepName, (input, ctx) =>
-    keywordResearch.execute(input as any, ctx),
-  );
   registerStep(trendDiscovery.stepName, (input, ctx) =>
     trendDiscovery.execute(input as any, ctx),
+  );
+  registerStep(keywordResearch.stepName, (input, ctx) =>
+    keywordResearch.execute(input as any, ctx),
   );
 }
 

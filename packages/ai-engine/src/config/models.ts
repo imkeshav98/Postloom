@@ -27,7 +27,7 @@ export const defaultModelConfig: ModelConfig = {
   writing: {
     model: "anthropic/claude-sonnet-4.6",
     temperature: 0.7,
-    maxTokens: 8192,
+    maxTokens: 32768,
   },
   imageGeneration: {
     model: "bytedance-seed/seedream-4.5",

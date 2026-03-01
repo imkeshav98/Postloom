@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Workflow } from "lucide-react";
 import { EnqueueButton } from "./enqueue-button";
+import { AutoRefresh } from "./auto-refresh";
 
 const statusColors: Record<string, string> = {
   QUEUED: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
@@ -39,8 +40,11 @@ export default async function PipelinePage() {
     }),
   ]);
 
+  const hasActive = runs.some((r) => r.status === "QUEUED" || r.status === "RUNNING");
+
   return (
     <div className="space-y-6">
+      <AutoRefresh active={hasActive} />
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-content">Pipeline Runs</h2>

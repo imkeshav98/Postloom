@@ -33,7 +33,7 @@ const PIPELINE_STEPS: Record<PipelineRunType, string[]> = {
     "setup-images",
     "setup-seo",
   ],
-  RESEARCH: ["niche-analysis", "keyword-research", "trend-discovery"],
+  RESEARCH: ["niche-analysis", "trend-discovery", "keyword-research"],
   GENERATE: [
     "content-planning",
     "topic-clustering",
