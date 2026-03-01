@@ -4,18 +4,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Eye, EyeOff, Pencil, Trash2, Clock } from "lucide-react";
 
 interface PostActionsProps {
   postId: string;
   currentStatus: string;
+  scheduledAt?: string | null;
 }
 
-export function PostActions({ postId, currentStatus }: PostActionsProps) {
+export function PostActions({ postId, currentStatus, scheduledAt }: PostActionsProps) {
   const router = useRouter();
   const [loading, setLoading] = useState("");
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState(scheduledAt ?? "");
 
   const isPublished = currentStatus === "PUBLISHED";
+  const isScheduled = currentStatus === "SCHEDULED";
 
   async function handleTogglePublish() {
     setLoading("publish");
@@ -25,6 +38,22 @@ export function PostActions({ postId, currentStatus }: PostActionsProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ publish: !isPublished }),
       });
+      router.refresh();
+    } finally {
+      setLoading("");
+    }
+  }
+
+  async function handleSchedule() {
+    if (!scheduleDate) return;
+    setLoading("schedule");
+    try {
+      await fetch(`/api/posts/${postId}/publish`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scheduledAt: scheduleDate }),
+      });
+      setScheduleOpen(false);
       router.refresh();
     } finally {
       setLoading("");
@@ -68,6 +97,40 @@ export function PostActions({ postId, currentStatus }: PostActionsProps) {
           </>
         )}
       </Button>
+
+      {/* Schedule Dialog */}
+      <Dialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" disabled={!!loading}>
+            <Clock className="h-4 w-4" />
+            {isScheduled ? "Reschedule" : "Schedule"}
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Schedule Post</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label>Publish Date & Time</Label>
+              <Input
+                type="datetime-local"
+                value={scheduleDate}
+                onChange={(e) => setScheduleDate(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setScheduleOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSchedule} disabled={loading === "schedule" || !scheduleDate}>
+                {loading === "schedule" ? "Scheduling..." : "Schedule"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Button
         variant="destructive"
         onClick={handleDelete}

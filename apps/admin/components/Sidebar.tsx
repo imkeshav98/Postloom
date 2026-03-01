@@ -8,6 +8,8 @@ import {
   FileText,
   Workflow,
   Search,
+  ClipboardList,
+  BarChart3,
   Settings,
   PanelLeftClose,
   PanelLeft,
@@ -22,8 +24,10 @@ const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/blogs", label: "Blogs", icon: Globe },
   { href: "/posts", label: "Posts", icon: FileText },
+  { href: "/content-plans", label: "Content Plans", icon: ClipboardList },
   { href: "/pipeline", label: "Pipeline", icon: Workflow },
   { href: "/keywords", label: "Keywords", icon: Search },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

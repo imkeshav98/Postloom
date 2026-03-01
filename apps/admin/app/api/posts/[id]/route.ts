@@ -32,7 +32,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  const { title, slug, excerpt, status, metaTitle, metaDescription, contentMarkdown, categoryId } = body;
+  const { title, slug, excerpt, status, metaTitle, metaDescription, contentMarkdown, categoryId, scheduledAt } = body;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: Record<string, any> = {
@@ -43,6 +43,7 @@ export async function PUT(
     ...(metaTitle !== undefined && { metaTitle }),
     ...(metaDescription !== undefined && { metaDescription }),
     ...(categoryId !== undefined && { categoryId: categoryId || null }),
+    ...(scheduledAt !== undefined && { scheduledAt: scheduledAt ? new Date(scheduledAt) : null }),
   };
 
   if (contentMarkdown !== undefined) {

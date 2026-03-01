@@ -32,3 +32,56 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({ posts, total, page, pages: Math.ceil(total / limit) });
 }
+
+export async function POST(request: NextRequest) {
+  const user = await validateSession();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await request.json();
+  const { title, blogId, categoryId, contentMarkdown, excerpt, metaTitle, metaDescription, status } = body;
+
+  if (!title || !blogId) {
+    return NextResponse.json({ error: "title and blogId are required" }, { status: 400 });
+  }
+
+  const slug =
+    body.slug ||
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+  const existing = await prisma.post.findFirst({
+    where: { blogId, slug },
+  });
+  if (existing) {
+    return NextResponse.json({ error: "Slug already exists for this blog" }, { status: 409 });
+  }
+
+  const content = contentMarkdown || "";
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+
+  const post = await prisma.post.create({
+    data: {
+      title,
+      slug,
+      blogId,
+      categoryId: categoryId || null,
+      contentMarkdown: content,
+      excerpt: excerpt || null,
+      metaTitle: metaTitle || null,
+      metaDescription: metaDescription || null,
+      status: status || "DRAFT",
+      aiGenerated: false,
+      humanEdited: true,
+      wordCount: words,
+      readingTime: Math.max(1, Math.ceil(words / 200)),
+    },
+    include: {
+      blog: { select: { id: true, name: true } },
+      category: { select: { id: true, name: true } },
+    },
+  });
+
+  return NextResponse.json(post, { status: 201 });
+}

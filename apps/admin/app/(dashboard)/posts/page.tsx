@@ -7,7 +7,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileText, Plus } from "lucide-react";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-slate-100 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
@@ -54,7 +55,13 @@ export default async function PostsPage({
           <h2 className="text-xl font-bold text-content">All Posts</h2>
           <p className="text-sm text-muted-foreground">{total} post{total !== 1 ? "s" : ""}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <Link href="/posts/new">
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              New Post
+            </Button>
+          </Link>
           {["", "DRAFT", "PUBLISHED", "ARCHIVED"].map((s) => (
             <Link
               key={s}

@@ -11,10 +11,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ExternalLink, ImageIcon } from "lucide-react";
 import { PostActions } from "./post-actions";
+import { AffiliateLinksSection } from "./affiliate-links";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-slate-100 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
   PUBLISHED: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300",
+  SCHEDULED: "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
   ARCHIVED: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300",
 };
 
@@ -82,7 +84,7 @@ export default async function PostDetailPage({
       </div>
 
       {/* Actions */}
-      <PostActions postId={post.id} currentStatus={post.status} />
+      <PostActions postId={post.id} currentStatus={post.status} scheduledAt={post.scheduledAt?.toISOString().slice(0, 16) ?? null} />
 
       {/* Metadata */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -98,6 +100,9 @@ export default async function PostDetailPage({
               <Field label="Created" value={post.createdAt.toLocaleString()} />
               {post.publishedAt && (
                 <Field label="Published" value={post.publishedAt.toLocaleString()} />
+              )}
+              {post.scheduledAt && (
+                <Field label="Scheduled For" value={post.scheduledAt.toLocaleString()} />
               )}
             </dl>
           </CardContent>
@@ -183,6 +188,9 @@ export default async function PostDetailPage({
           </Card>
         )}
       </div>
+
+      {/* Affiliate Links */}
+      <AffiliateLinksSection postId={post.id} />
 
       {/* Content preview */}
       {post.contentMarkdown && (

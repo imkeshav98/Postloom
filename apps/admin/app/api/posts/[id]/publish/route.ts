@@ -11,15 +11,32 @@ export async function POST(
 
   const { id } = await params;
   const body = await request.json();
-  const publish = body.publish !== false;
+  const { publish, scheduledAt } = body;
 
-  const post = await prisma.post.update({
-    where: { id },
-    data: {
-      status: publish ? "PUBLISHED" : "DRAFT",
-      publishedAt: publish ? new Date() : null,
-    },
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let data: Record<string, any>;
+
+  if (scheduledAt) {
+    data = {
+      status: "SCHEDULED",
+      scheduledAt: new Date(scheduledAt),
+      publishedAt: null,
+    };
+  } else if (publish !== false) {
+    data = {
+      status: "PUBLISHED",
+      publishedAt: new Date(),
+      scheduledAt: null,
+    };
+  } else {
+    data = {
+      status: "DRAFT",
+      publishedAt: null,
+      scheduledAt: null,
+    };
+  }
+
+  const post = await prisma.post.update({ where: { id }, data });
 
   return NextResponse.json(post);
 }

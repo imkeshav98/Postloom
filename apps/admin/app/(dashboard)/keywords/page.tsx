@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { validateSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -7,31 +8,92 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
+import { KeywordActions } from "./keyword-actions";
 
-export default async function KeywordsPage() {
+export default async function KeywordsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; blogId?: string; q?: string }>;
+}) {
   const user = await validateSession();
   if (!user) redirect("/login");
 
-  const keywords = await prisma.keyword.findMany({
-    take: 100,
-    orderBy: { searchVolume: "desc" },
-    include: {
-      blog: { select: { name: true } },
-    },
-  });
+  const sp = await searchParams;
+  const page = parseInt(sp.page || "1");
+  const limit = 20;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: Record<string, any> = {};
+  if (sp.blogId) where.blogId = sp.blogId;
+  if (sp.q) where.keyword = { contains: sp.q, mode: "insensitive" };
+
+  const [keywords, total, blogs] = await Promise.all([
+    prisma.keyword.findMany({
+      where,
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: { searchVolume: "desc" },
+      include: {
+        blog: { select: { name: true } },
+      },
+    }),
+    prisma.keyword.count({ where }),
+    prisma.blog.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  function filterUrl(overrides: Record<string, string>) {
+    const p = new URLSearchParams();
+    if (overrides.blogId ?? sp.blogId) p.set("blogId", overrides.blogId ?? sp.blogId!);
+    if (sp.q) p.set("q", sp.q);
+    if (overrides.page) p.set("page", overrides.page);
+    const qs = p.toString();
+    return `/keywords${qs ? `?${qs}` : ""}`;
+  }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-content">Keywords</h2>
-        <p className="text-sm text-muted-foreground">{keywords.length} keyword{keywords.length !== 1 ? "s" : ""}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-content">Keywords</h2>
+          <p className="text-sm text-muted-foreground">{total} keyword{total !== 1 ? "s" : ""}</p>
+        </div>
+        <KeywordActions blogs={blogs} />
+      </div>
+
+      {/* Blog filter */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Link
+          href={`/keywords${sp.q ? `?q=${sp.q}` : ""}`}
+          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            !sp.blogId
+              ? "bg-primary/10 text-primary"
+              : "bg-surface-alt text-muted-foreground hover:text-content"
+          }`}
+        >
+          All Blogs
+        </Link>
+        {blogs.map((b) => (
+          <Link
+            key={b.id}
+            href={filterUrl({ blogId: b.id, page: "1" })}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              sp.blogId === b.id
+                ? "bg-primary/10 text-primary"
+                : "bg-surface-alt text-muted-foreground hover:text-content"
+            }`}
+          >
+            {b.name}
+          </Link>
+        ))}
       </div>
 
       {keywords.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <Search className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">No keywords yet. Run a RESEARCH pipeline to discover keywords.</p>
+            <p className="text-sm text-muted-foreground">No keywords found.</p>
           </CardContent>
         </Card>
       ) : (
@@ -79,6 +141,24 @@ export default async function KeywordsPage() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <Link
+              key={p}
+              href={filterUrl({ page: String(p) })}
+              className={`flex h-8 w-8 items-center justify-center rounded-md text-xs ${
+                p === page
+                  ? "bg-primary/10 text-primary"
+                  : "bg-surface-alt text-muted-foreground hover:text-content"
+              }`}
+            >
+              {p}
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   );
