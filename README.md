@@ -50,7 +50,8 @@ Postloom/
 │   ├── ai-engine/      # OpenRouter client, pipeline steps
 │   ├── shared/         # Shared types
 │   └── tsconfig/       # Shared TS configs
-├── docker-compose.yml  # PostgreSQL
+├── nginx/              # Nginx reverse proxy config
+├── docker-compose.yml  # Full stack orchestration
 └── .env                # Environment variables
 ```
 
@@ -124,19 +125,64 @@ The worker processes two types of pipeline runs:
 | 10 | Publishing | Publishes post and triggers blog revalidation |
 | 11 | Performance Monitoring | Tracks post metrics over time |
 
+## Docker Deployment
+
+No Node.js or pnpm needed on the host — only Docker.
+
+### Quick Start
+
+```bash
+git clone <repo-url>
+cd postloom
+cp .env.example .env
+# Fill in your values (see Environment Variables below)
+docker compose build
+docker compose up -d
+```
+
+### Nginx & Domains
+
+Nginx routes traffic by domain. Edit `nginx/default.conf` to set your domains:
+
+- `admin.yourdomain.com` → admin app
+- `yourblog.com` → blog app
+
+For local testing, add to your hosts file (`C:\Windows\System32\drivers\etc\hosts` or `/etc/hosts`):
+
+```
+127.0.0.1 admin.postloom.local
+127.0.0.1 blog1.postloom.local
+```
+
+### Adding More Blogs
+
+1. Create the blog in the admin dashboard — note the Blog ID
+2. Duplicate the `blog` service in `docker-compose.yml` with a new name and `BLOG_ID`
+3. Add a matching `server` block in `nginx/default.conf`
+4. `docker compose up -d --build`
+
+### SSL
+
+When you configure HTTPS (e.g. Certbot, Cloudflare), set `SECURE_COOKIES=true` in `.env` to enable secure session cookies.
+
 ## Environment Variables
 
 | Variable | Used by | Description |
 |----------|---------|-------------|
 | `DATABASE_URL` | admin, worker | PostgreSQL connection (full privileges) |
 | `BLOG_DATABASE_URL` | blog | PostgreSQL connection (read-only) |
+| `POSTGRES_PASSWORD` | docker-compose | PostgreSQL password |
+| `BLOG_READER_PASSWORD` | docker-compose | Read-only DB role password |
 | `SESSION_SECRET` | admin | Session cookie signing key |
+| `SECURE_COOKIES` | admin | Set to `true` when using HTTPS |
+| `ADMIN_EMAIL` | admin | Admin login email |
+| `ADMIN_PASSWORD_HASH` | admin | Bcrypt hash of admin password |
 | `OPENROUTER_API_KEY` | worker | OpenRouter API key for AI models |
 | `CLOUDINARY_CLOUD_NAME` | worker | Cloudinary cloud name |
 | `CLOUDINARY_API_KEY` | worker | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | worker | Cloudinary API secret |
 | `BLOG_ID` | blog | Which blog this deployment serves |
-| `REVALIDATION_SECRET` | blog | Webhook secret for ISR cache invalidation |
+| `REVALIDATION_SECRET` | blog, worker | Shared secret for ISR cache invalidation |
 
 ## Scripts
 
