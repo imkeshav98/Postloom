@@ -74,6 +74,52 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
+
+  // Get the post's slug so we can clean up links in other posts' content
+  const post = await prisma.post.findUnique({
+    where: { id },
+    select: { slug: true },
+  });
+
+  if (post) {
+    // Find all posts that link TO this post and remove the markdown links from their content
+    const incomingLinks = await prisma.internalLink.findMany({
+      where: { targetPostId: id },
+      select: { sourcePostId: true, anchorText: true },
+    });
+
+    for (const link of incomingLinks) {
+      const sourcePost = await prisma.post.findUnique({
+        where: { id: link.sourcePostId },
+        select: { contentMarkdown: true },
+      });
+      if (!sourcePost?.contentMarkdown) continue;
+
+      let cleaned = sourcePost.contentMarkdown;
+      // Remove inline links like [anchor text](/slug)
+      cleaned = cleaned.replace(
+        new RegExp(`\\[([^\\]]*?)\\]\\(\\/${escapeRegex(post.slug)}\\)`, "g"),
+        "$1",
+      );
+      // Remove full appended sentences like "\n\nYou might also enjoy our guide on [anchor](/slug)."
+      cleaned = cleaned.replace(
+        new RegExp(`\\n\\nYou might also enjoy our guide on [^.]*\\/${escapeRegex(post.slug)}\\)\\.`, "g"),
+        "",
+      );
+
+      if (cleaned !== sourcePost.contentMarkdown) {
+        await prisma.post.update({
+          where: { id: link.sourcePostId },
+          data: { contentMarkdown: cleaned },
+        });
+      }
+    }
+  }
+
   await prisma.post.delete({ where: { id } });
   return NextResponse.json({ success: true });
+}
+
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

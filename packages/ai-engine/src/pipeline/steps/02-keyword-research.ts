@@ -59,6 +59,13 @@ async function execute(
 ): Promise<KeywordResearchOutput> {
   const config = await getModelConfig(context.blogId);
 
+  // Fetch existing keywords so the AI avoids duplicates/near-duplicates
+  const existingKeywords = await prisma.keyword.findMany({
+    where: { blogId: context.blogId },
+    select: { keyword: true },
+  });
+  const existingKeywordList = existingKeywords.map((k) => k.keyword);
+
   const result = await chatJSON<AIKeywordResponse>({
     model: config.research.model,
     temperature: config.research.temperature,
@@ -71,6 +78,7 @@ async function execute(
           input.nicheProfile.description,
           input.contentGaps.map((g) => g.topic),
           input.recommendedTopics,
+          existingKeywordList,
         ),
       },
     ],

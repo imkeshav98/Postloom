@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, FlaskConical } from "lucide-react";
+import { Search, FlaskConical, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 interface KeywordActionsProps {
@@ -125,5 +125,56 @@ export function KeywordActions({ blogs }: KeywordActionsProps) {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+// ─── Generate button for unused keywords ────────────────────────────────────
+
+interface GenerateButtonProps {
+  keywordId: string;
+  blogId: string;
+}
+
+export function GenerateButton({ keywordId, blogId }: GenerateButtonProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  async function handleGenerate() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/pipeline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blogId,
+          type: "GENERATE",
+          input: { keywordId },
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        toast.error(err.error || "Failed to enqueue generation");
+        return;
+      }
+      toast.success("Content generation enqueued for this keyword");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={handleGenerate}
+      disabled={loading}
+      className="h-7 gap-1 text-xs text-primary hover:text-primary"
+    >
+      <Sparkles className="h-3.5 w-3.5" />
+      {loading ? "Queuing..." : "Generate"}
+    </Button>
   );
 }

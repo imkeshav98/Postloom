@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ExternalLink, ImageIcon } from "lucide-react";
+import { ArrowLeft, ExternalLink, ImageIcon, Link2 } from "lucide-react";
 import { PostActions } from "./post-actions";
 import { AffiliateLinksSection } from "./affiliate-links";
 
@@ -29,15 +29,25 @@ export default async function PostDetailPage({
   if (!user) redirect("/login");
 
   const { id } = await params;
-  const post = await prisma.post.findUnique({
-    where: { id },
-    include: {
-      blog: { select: { name: true, domain: true, slug: true, defaultAuthor: true } },
-      category: { select: { name: true } },
-      tags: true,
-      images: true,
-    },
-  });
+  const [post, outgoingLinks, incomingLinks] = await Promise.all([
+    prisma.post.findUnique({
+      where: { id },
+      include: {
+        blog: { select: { name: true, domain: true, slug: true, defaultAuthor: true } },
+        category: { select: { name: true } },
+        tags: true,
+        images: true,
+      },
+    }),
+    prisma.internalLink.findMany({
+      where: { sourcePostId: id },
+      include: { targetPost: { select: { id: true, title: true, slug: true } } },
+    }),
+    prisma.internalLink.findMany({
+      where: { targetPostId: id },
+      include: { sourcePost: { select: { id: true, title: true, slug: true } } },
+    }),
+  ]);
 
   if (!post) notFound();
 
@@ -191,6 +201,68 @@ export default async function PostDetailPage({
 
       {/* Affiliate Links */}
       <AffiliateLinksSection postId={post.id} />
+
+      {/* Internal Links */}
+      {(outgoingLinks.length > 0 || incomingLinks.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">
+              <span className="flex items-center gap-2">
+                <Link2 className="h-4 w-4" />
+                Internal Links ({outgoingLinks.length + incomingLinks.length})
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {outgoingLinks.length > 0 && (
+              <div>
+                <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Outgoing ({outgoingLinks.length})
+                </h4>
+                <ul className="space-y-1.5">
+                  {outgoingLinks.map((link) => (
+                    <li key={link.id} className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">→</span>
+                      <Link
+                        href={`/posts/${link.targetPost.id}`}
+                        className="text-accent hover:underline"
+                      >
+                        {link.targetPost.title}
+                      </Link>
+                      <span className="text-xs text-muted-foreground">
+                        &ldquo;{link.anchorText}&rdquo;
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {incomingLinks.length > 0 && (
+              <div>
+                <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Incoming ({incomingLinks.length})
+                </h4>
+                <ul className="space-y-1.5">
+                  {incomingLinks.map((link) => (
+                    <li key={link.id} className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">←</span>
+                      <Link
+                        href={`/posts/${link.sourcePost.id}`}
+                        className="text-accent hover:underline"
+                      >
+                        {link.sourcePost.title}
+                      </Link>
+                      <span className="text-xs text-muted-foreground">
+                        &ldquo;{link.anchorText}&rdquo;
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Content preview */}
       {post.contentMarkdown && (

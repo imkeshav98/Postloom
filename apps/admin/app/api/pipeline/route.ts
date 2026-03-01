@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { blogId, type } = body;
+  const { blogId, type, input: extraInput } = body;
 
   if (!blogId || !type) {
     return NextResponse.json(
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       status: "QUEUED",
       priority: type === "SETUP" ? 10 : 0,
       idempotencyKey: `admin-${type}-${blogId}-${Date.now()}`,
-      input: { niche: blog.niche },
+      input: { niche: blog.niche, ...extraInput },
       requestedById: user.id,
     },
   });

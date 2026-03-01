@@ -3,7 +3,12 @@ export function buildKeywordResearchPrompt(
   nicheProfile: string,
   contentGaps: string[],
   recommendedTopics: string[],
+  existingKeywords: string[],
 ): string {
+  const existingSection = existingKeywords.length > 0
+    ? `\nExisting keywords already in our database:\n${existingKeywords.map((k) => `- ${k}`).join("\n")}\n`
+    : "";
+
   return `You are an expert SEO keyword researcher. Based on the niche analysis below, generate a comprehensive list of blog post keywords.
 
 Niche: "${niche}"
@@ -16,7 +21,7 @@ ${contentGaps.map((g) => `- ${g}`).join("\n")}
 
 Recommended Topics:
 ${recommendedTopics.map((t) => `- ${t}`).join("\n")}
-
+${existingSection}
 Generate 20-30 keywords that would make good blog post targets. For each keyword:
 
 1. **keyword**: The exact search query people type into Google (long-tail preferred, 3-6 words).
@@ -24,6 +29,10 @@ Generate 20-30 keywords that would make good blog post targets. For each keyword
 3. **difficulty**: How hard it is to rank (0-100 scale, where 0 = easy, 100 = impossible).
 4. **cpc**: Estimated cost-per-click in USD (for monetization potential).
 5. **intent**: The search intent — one of: INFORMATIONAL, NAVIGATIONAL, TRANSACTIONAL, COMMERCIAL.
+
+Keyword uniqueness:
+- Do NOT repeat exact keywords or very close rewording (e.g. "how to lose belly fat" vs "how to lose belly fat fast" — these are too similar).
+- Related keywords in the same topic area ARE fine as long as they would produce a clearly different article (e.g. "belly fat causes hormonal imbalance" is fine alongside "how to lose belly fat").
 
 Focus on:
 - Long-tail keywords (easier to rank for new blogs)

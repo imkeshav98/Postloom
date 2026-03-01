@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
-import { KeywordActions } from "./keyword-actions";
+import { KeywordActions, GenerateButton } from "./keyword-actions";
 
 export default async function KeywordsPage({
   searchParams,
@@ -34,7 +34,11 @@ export default async function KeywordsPage({
       skip: (page - 1) * limit,
       orderBy: { searchVolume: "desc" },
       include: {
-        blog: { select: { name: true } },
+        blog: { select: { id: true, name: true } },
+        contentPlans: {
+          select: { id: true, status: true },
+          take: 1,
+        },
       },
     }),
     prisma.keyword.count({ where }),
@@ -110,32 +114,60 @@ export default async function KeywordsPage({
                     <th className="px-4 py-3 font-medium text-muted-foreground text-right">CPC</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground">Intent</th>
                     <th className="px-4 py-3 font-medium text-muted-foreground text-right">Trend</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">Status</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-edge/60 dark:divide-white/5">
-                  {keywords.map((kw) => (
-                    <tr key={kw.id} className="transition-colors hover:bg-surface-alt">
-                      <td className="px-4 py-3 font-medium text-content">{kw.keyword}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{kw.blog.name}</td>
-                      <td className="px-4 py-3 text-right text-content">
-                        {kw.searchVolume?.toLocaleString() ?? "—"}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <DifficultyBadge value={kw.difficulty} />
-                      </td>
-                      <td className="px-4 py-3 text-right text-content">
-                        {kw.cpc != null ? `$${kw.cpc.toFixed(2)}` : "—"}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge variant="outline" className="text-xs">
-                          {kw.intent ?? "—"}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 text-right text-content">
-                        {kw.trendScore != null ? `${Math.round(kw.trendScore * 100)}%` : "—"}
-                      </td>
-                    </tr>
-                  ))}
+                  {keywords.map((kw) => {
+                    const plan = kw.contentPlans[0];
+                    const isUsed = !!plan;
+                    return (
+                      <tr key={kw.id} className="transition-colors hover:bg-surface-alt">
+                        <td className="px-4 py-3 font-medium text-content">{kw.keyword}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{kw.blog.name}</td>
+                        <td className="px-4 py-3 text-right text-content">
+                          {kw.searchVolume?.toLocaleString() ?? "—"}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <DifficultyBadge value={kw.difficulty} />
+                        </td>
+                        <td className="px-4 py-3 text-right text-content">
+                          {kw.cpc != null ? `$${kw.cpc.toFixed(2)}` : "—"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge variant="outline" className="text-xs">
+                            {kw.intent ?? "—"}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-right text-content">
+                          {kw.trendScore != null ? `${Math.round(kw.trendScore * 100)}%` : "—"}
+                        </td>
+                        <td className="px-4 py-3">
+                          {isUsed ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300"
+                            >
+                              {plan.status === "COMPLETED" ? "Published" : plan.status === "IN_PROGRESS" ? "In Progress" : "Planned"}
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="secondary"
+                              className="bg-slate-100 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400"
+                            >
+                              Unused
+                            </Badge>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {!isUsed && (
+                            <GenerateButton keywordId={kw.id} blogId={kw.blog.id} />
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
