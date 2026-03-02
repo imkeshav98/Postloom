@@ -12,7 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -64,6 +64,19 @@ services:
       BLOG_ID: ${BLOG_ID}
       REVALIDATION_SECRET: ${REVALIDATION_SECRET}
 
+  blog2:
+    build:
+      context: .
+      dockerfile: apps/blog/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://blog_reader:${BLOG_READER_PASSWORD:-blog_reader_password}@db:5432/postloom?schema=public
+      BLOG_ID: cmm8rgoy4000301od7mpp2bss
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+
   # ─── Nginx Reverse Proxy ──────────────────────────────────────────────────
   nginx:
     image: nginx:alpine
@@ -76,6 +89,7 @@ services:
     depends_on:
       - admin
       - blog
+      - blog2
 
 volumes:
   pgdata:
