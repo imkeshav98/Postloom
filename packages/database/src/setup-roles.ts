@@ -52,6 +52,7 @@ async function main() {
       "Category",
       "Tag",
       "Image",
+      "Page",
       "SiteConfig",
       "AffiliateLink",
       "InternalLink",
