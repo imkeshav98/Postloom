@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
       <div className="animate-fade-in-up">
-        <p className="mb-4 text-8xl font-bold text-primary">
+        <p className="mb-4 text-8xl font-bold text-accent">
           404
         </p>
         <h1 className="mb-2 text-xl font-medium text-content">

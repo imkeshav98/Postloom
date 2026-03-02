@@ -21,7 +21,7 @@ export function PostCard({ post, author }: PostCardProps) {
     : null;
 
   return (
-    <article className="group overflow-hidden rounded-3xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
+    <article className="group overflow-hidden rounded-3xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5">
       <Link href={`/${post.slug}`} className="block">
         {/* Thumbnail */}
         <div className="relative aspect-[4/3] overflow-hidden bg-hero">
@@ -56,7 +56,7 @@ export function PostCard({ post, author }: PostCardProps) {
           {/* Category + Date row */}
           <div className="mb-3 flex items-center justify-between text-xs">
             {post.category ? (
-              <span className="rounded-full border border-primary/30 px-3 py-1 font-medium text-primary">
+              <span className="rounded-full border border-accent/30 px-3 py-1 font-medium text-accent">
                 {post.category.name}
               </span>
             ) : (

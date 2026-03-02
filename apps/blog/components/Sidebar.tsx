@@ -22,7 +22,7 @@ export function Sidebar({ relatedPosts, author, adsenseSlot }: SidebarProps) {
       {/* Related posts */}
       {relatedPosts.length > 0 && (
         <div>
-          <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-primary/60">
+          <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-accent/60">
             Related Articles
           </h3>
           <div className="space-y-4">

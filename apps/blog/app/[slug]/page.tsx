@@ -196,7 +196,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   <a
                     key={tag.id}
                     href={`/tag/${tag.slug}`}
-                    className="rounded-full border border-edge bg-surface-alt/50 px-3 py-1.5 text-xs font-medium text-muted transition-all duration-200 hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
+                    className="rounded-full border border-edge bg-surface-alt/50 px-3 py-1.5 text-xs font-medium text-muted transition-all duration-200 hover:border-accent/30 hover:bg-accent/5 hover:text-accent"
                   >
                     #{tag.name}
                   </a>

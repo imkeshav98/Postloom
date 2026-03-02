@@ -286,7 +286,7 @@ body {
 }
 
 .prose :where(tbody tr):hover {
-  background: color-mix(in srgb, var(--site-primary) 4%, transparent);
+  background: color-mix(in srgb, var(--site-accent) 4%, transparent);
 }
 
 /* Prose inline code */
@@ -319,7 +319,7 @@ body {
   color: var(--site-primary);
 }
 .prose :where(ol > li)::marker {
-  color: var(--site-primary);
+  color: var(--site-accent);
   font-weight: 600;
 }
 
@@ -422,9 +422,9 @@ details[open] > summary ~ * {
 }
 
 .btn-outline:hover {
-  border-color: var(--site-primary);
-  color: var(--site-primary);
-  background: color-mix(in srgb, var(--site-primary) 5%, transparent);
+  border-color: var(--site-accent);
+  color: var(--site-accent);
+  background: color-mix(in srgb, var(--site-accent) 5%, transparent);
 }
 
 .btn-outline-primary {

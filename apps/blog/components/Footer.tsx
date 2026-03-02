@@ -46,9 +46,9 @@ export function Footer({ blog, categories }: FooterProps) {
                 <li key={cat.id}>
                   <Link
                     href={`/category/${cat.slug}`}
-                    className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors duration-200 hover:text-primary"
+                    className="group inline-flex items-center gap-1.5 text-sm text-muted transition-colors duration-200 hover:text-accent"
                   >
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary/30 transition-colors group-hover:bg-primary" />
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent/30 transition-colors group-hover:bg-accent" />
                     {cat.name}
                   </Link>
                 </li>
@@ -72,7 +72,7 @@ export function Footer({ blog, categories }: FooterProps) {
                 <li key={p.slug}>
                   <Link
                     href={`/info/${p.slug}`}
-                    className="text-sm text-muted transition-colors duration-200 hover:text-primary"
+                    className="text-sm text-muted transition-colors duration-200 hover:text-accent"
                   >
                     {p.label}
                   </Link>

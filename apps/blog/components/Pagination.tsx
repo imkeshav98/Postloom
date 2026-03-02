@@ -41,7 +41,7 @@ export function Pagination({
       {currentPage > 1 && (
         <Link
           href={buildHref(currentPage - 1)}
-          className="mr-2 flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-primary/5 hover:text-primary"
+          className="mr-2 flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-accent/5 hover:text-accent"
           aria-label="Previous page"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -62,7 +62,7 @@ export function Pagination({
             className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all duration-200 ${
               page === currentPage
                 ? "bg-primary-fill text-white"
-                : "text-muted hover:bg-primary/5 hover:text-primary"
+                : "text-muted hover:bg-accent/5 hover:text-accent"
             }`}
           >
             {page}
@@ -73,7 +73,7 @@ export function Pagination({
       {currentPage < totalPages && (
         <Link
           href={buildHref(currentPage + 1)}
-          className="ml-2 flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-primary/5 hover:text-primary"
+          className="ml-2 flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:bg-accent/5 hover:text-accent"
           aria-label="Next page"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

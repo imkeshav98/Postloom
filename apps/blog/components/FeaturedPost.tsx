@@ -21,10 +21,10 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
 
   return (
     <Link href={`/${post.slug}`} className="group block">
-      <div className="overflow-hidden rounded-3xl shadow-lg shadow-primary/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/12">
+      <div className="overflow-hidden rounded-3xl shadow-lg shadow-accent/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-accent/12">
         <div className="grid md:grid-cols-[1fr_1.2fr]">
           {/* Text panel */}
-          <div className="flex flex-col justify-center bg-primary-fill px-8 py-10 md:px-12 md:py-16">
+          <div className="flex flex-col justify-center bg-gradient-to-br from-primary-fill to-accent/90 px-8 py-10 md:px-12 md:py-16">
             {post.category && (
               <span className="mb-4 inline-block w-fit rounded-full border border-white/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-white/80">
                 {post.category.name}
