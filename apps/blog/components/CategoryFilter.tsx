@@ -30,7 +30,7 @@ export function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) 
         className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
           !activeSlug
             ? "bg-primary-fill text-white"
-            : "ring-1 ring-edge text-muted hover:ring-accent hover:text-accent"
+            : "ring-1 ring-inset ring-edge text-muted hover:ring-accent hover:text-accent"
         }`}
       >
         All
@@ -43,7 +43,7 @@ export function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) 
           className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
             activeSlug === cat.slug
               ? "bg-primary-fill text-white"
-              : "ring-1 ring-edge text-muted hover:ring-accent hover:text-accent"
+              : "ring-1 ring-inset ring-edge text-muted hover:ring-accent hover:text-accent"
           }`}
         >
           {cat.name}
