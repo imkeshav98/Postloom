@@ -56,7 +56,7 @@ export function PostCard({ post, author }: PostCardProps) {
           {/* Category + Date row */}
           <div className="mb-3 flex items-center justify-between text-xs">
             {post.category ? (
-              <span className="rounded-full border border-accent/30 px-3 py-1 font-medium text-accent">
+              <span className="rounded-full ring-1 ring-accent/30 px-3 py-1 font-medium text-accent">
                 {post.category.name}
               </span>
             ) : (

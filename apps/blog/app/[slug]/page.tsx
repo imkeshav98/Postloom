@@ -134,7 +134,7 @@ export default async function PostPage({ params }: PostPageProps) {
             {post.category && (
               <Link
                 href={`/category/${post.category.slug}`}
-                className="rounded-full border border-accent/40 px-3 py-1 font-medium text-accent transition-colors hover:bg-accent/5"
+                className="rounded-full ring-1 ring-accent/40 px-3 py-1 font-medium text-accent transition-colors hover:bg-accent/5"
               >
                 {post.category.name}
               </Link>
@@ -196,7 +196,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   <a
                     key={tag.id}
                     href={`/tag/${tag.slug}`}
-                    className="rounded-full border border-edge bg-surface-alt/50 px-3 py-1.5 text-xs font-medium text-muted transition-all duration-200 hover:border-accent/30 hover:bg-accent/5 hover:text-accent"
+                    className="rounded-full ring-1 ring-edge bg-surface-alt/50 px-3 py-1.5 text-xs font-medium text-muted transition-all duration-200 hover:ring-accent/30 hover:bg-accent/5 hover:text-accent"
                   >
                     #{tag.name}
                   </a>

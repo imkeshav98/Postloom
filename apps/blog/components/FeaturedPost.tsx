@@ -29,7 +29,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
             style={{ background: "linear-gradient(to bottom right, color-mix(in srgb, var(--site-primary-fill) 88%, white), color-mix(in srgb, var(--site-primary-fill) 85%, black))" }}
           >
             {post.category && (
-              <span className="mb-4 inline-block w-fit rounded-full border border-white/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-white/80">
+              <span className="mb-4 inline-block w-fit rounded-full ring-1 ring-white/30 px-3 py-1 text-xs font-medium uppercase tracking-widest text-white/80">
                 {post.category.name}
               </span>
             )}
@@ -45,7 +45,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
               {date && (
                 <time className="text-xs text-white/50">{date}</time>
               )}
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white/90 transition-all duration-300 group-hover:gap-2.5 group-hover:border-white/50">
+              <span className="inline-flex items-center gap-1.5 rounded-full ring-1 ring-white/30 px-4 py-2 text-sm font-medium text-white/90 transition-all duration-300 group-hover:gap-2.5 group-hover:ring-white/50">
                 Read article
                 <svg
                   width="14"
