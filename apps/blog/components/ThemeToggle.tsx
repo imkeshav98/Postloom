@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
+  const pathname = usePathname();
 
+  // Sync theme from localStorage on mount and on every navigation,
+  // so the attribute is restored if React reconciliation drops it (e.g. 404).
   useEffect(() => {
-    setDark(document.documentElement.getAttribute("data-theme") === "dark");
-  }, []);
+    const stored = localStorage.getItem("theme");
+    const isDark = stored === "dark";
+    setDark(isDark);
+    if (stored) {
+      document.documentElement.setAttribute("data-theme", stored);
+    }
+  }, [pathname]);
 
   function toggle() {
     const next = !dark;
