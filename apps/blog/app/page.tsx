@@ -64,9 +64,9 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <img
               src={blog.siteConfig.heroImageUrl}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover opacity-20"
+              className="absolute inset-0 h-full w-full object-cover opacity-35"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-surface/40 to-surface" />
+            <div className="absolute inset-0 bg-gradient-to-b from-surface/20 to-surface" />
           </>
         )}
         <div className="relative mx-auto max-w-7xl">
