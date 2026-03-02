@@ -13,10 +13,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing tag parameter" }, { status: 400 });
   }
 
-  // Revalidate the specific post
-  revalidateTag(`post-${tag}`);
-  // Also revalidate post listings (homepage, category pages)
-  revalidateTag("posts");
+  revalidateTag(tag);
 
   return NextResponse.json({ revalidated: true, tag });
 }

@@ -86,6 +86,20 @@ export async function PUT(
     include: { siteConfig: true },
   });
 
+  // Revalidate blog cache so changes take effect immediately
+  const secret = process.env.REVALIDATION_SECRET;
+  if (secret) {
+    const blogHosts = (process.env.BLOG_HOSTS || "blog:3000").split(",");
+    const tags = ["blog-config", "posts", "pages"];
+    await Promise.allSettled(
+      blogHosts.flatMap((host) =>
+        tags.map((tag) =>
+          fetch(`http://${host.trim()}/api/revalidate?secret=${secret}&tag=${tag}`, { method: "POST" })
+        )
+      )
+    );
+  }
+
   return NextResponse.json(updated);
 }
 

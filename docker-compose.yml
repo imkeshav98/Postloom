@@ -30,6 +30,8 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@db:5432/postloom?schema=public
       SESSION_SECRET: ${SESSION_SECRET}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@postloom.com}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+      BLOG_HOSTS: blog:3000,blog2:3000
 
   # ─── Background Worker ────────────────────────────────────────────────────
   worker:
