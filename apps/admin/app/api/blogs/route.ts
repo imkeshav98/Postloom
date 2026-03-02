@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { name, slug, niche, description, domain, language } = body;
+  const { name, slug, niche, description, domain, language, siteConfig } = body;
 
   if (!name || !slug || !niche) {
     return NextResponse.json(
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       domain: domain || null,
       language: language || "en",
       siteConfig: {
-        create: { palette: "default", postsPerPage: 10 },
+        create: { palette: siteConfig?.palette || "default", postsPerPage: 10 },
       },
     },
   });

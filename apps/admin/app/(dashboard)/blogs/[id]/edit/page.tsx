@@ -20,8 +20,15 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/ui/tabs";
-import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
+
+const PALETTES = [
+  { value: "default", label: "Indigo", primary: "#4f46e5", accent: "#7c3aed" },
+  { value: "coral", label: "Coral", primary: "#ea580c", accent: "#dc2626" },
+  { value: "emerald", label: "Emerald", primary: "#059669", accent: "#0284c7" },
+  { value: "teal", label: "Teal", primary: "#0f766e", accent: "#b45309" },
+] as const;
 
 interface BlogData {
   id: string;
@@ -287,11 +294,35 @@ export default function BlogEditPage() {
               <CardTitle className="text-base">Advanced Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="palette">Color Palette</Label>
-                  <Input id="palette" value={palette} onChange={(e) => setPalette(e.target.value)} />
+              <div className="space-y-2">
+                <Label>Color Palette</Label>
+                <div className="grid grid-cols-4 gap-3">
+                  {PALETTES.map((p) => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => setPalette(p.value)}
+                      className={`relative flex flex-col items-center gap-2 rounded-lg border-2 p-3 transition-all ${
+                        palette === p.value
+                          ? "border-primary bg-primary/5 ring-1 ring-primary"
+                          : "border-edge hover:border-muted-foreground/40"
+                      }`}
+                    >
+                      {palette === p.value && (
+                        <div className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary">
+                          <Check className="h-2.5 w-2.5 text-white" />
+                        </div>
+                      )}
+                      <div className="flex gap-1.5">
+                        <span className="h-6 w-6 rounded-full border border-black/10" style={{ background: p.primary }} />
+                        <span className="h-6 w-6 rounded-full border border-black/10" style={{ background: p.accent }} />
+                      </div>
+                      <span className="text-xs font-medium text-content">{p.label}</span>
+                    </button>
+                  ))}
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="postsPerPage">Posts Per Page</Label>
                   <Input id="postsPerPage" type="number" min={1} max={100} value={postsPerPage} onChange={(e) => setPostsPerPage(parseInt(e.target.value) || 10)} />

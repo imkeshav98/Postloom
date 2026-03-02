@@ -7,13 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
+
+const PALETTES = [
+  { value: "default", label: "Indigo", primary: "#4f46e5", accent: "#7c3aed" },
+  { value: "coral", label: "Coral", primary: "#ea580c", accent: "#dc2626" },
+  { value: "emerald", label: "Emerald", primary: "#059669", accent: "#0284c7" },
+  { value: "teal", label: "Teal", primary: "#0f766e", accent: "#b45309" },
+] as const;
 
 export default function NewBlogPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [palette, setPalette] = useState("default");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,6 +36,7 @@ export default function NewBlogPage() {
       description: form.get("description"),
       domain: form.get("domain"),
       language: form.get("language") || "en",
+      siteConfig: { palette },
     };
 
     try {
@@ -104,6 +113,35 @@ export default function NewBlogPage() {
                 placeholder="A brief description of your blog..."
                 rows={3}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Color Palette</Label>
+              <div className="grid grid-cols-4 gap-3">
+                {PALETTES.map((p) => (
+                  <button
+                    key={p.value}
+                    type="button"
+                    onClick={() => setPalette(p.value)}
+                    className={`relative flex flex-col items-center gap-2 rounded-lg border-2 p-3 transition-all ${
+                      palette === p.value
+                        ? "border-primary bg-primary/5 ring-1 ring-primary"
+                        : "border-edge hover:border-muted-foreground/40"
+                    }`}
+                  >
+                    {palette === p.value && (
+                      <div className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary">
+                        <Check className="h-2.5 w-2.5 text-white" />
+                      </div>
+                    )}
+                    <div className="flex gap-1.5">
+                      <span className="h-6 w-6 rounded-full border border-black/10" style={{ background: p.primary }} />
+                      <span className="h-6 w-6 rounded-full border border-black/10" style={{ background: p.accent }} />
+                    </div>
+                    <span className="text-xs font-medium text-content">{p.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}
