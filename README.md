@@ -162,7 +162,8 @@ For local testing, add to your hosts file (`C:\Windows\System32\drivers\etc\host
 1. Create the blog in the admin dashboard — note the Blog ID
 2. Duplicate the `blog` service in `docker-compose.yml` with a new name and `BLOG_ID`
 3. Add a matching `server` block in `nginx/default.conf`
-4. `docker compose up -d --build`
+4. Append the new blog host to `BLOG_HOSTS` in the admin service (e.g. `blog:3000,blog2:3000,blog-new:3000`)
+5. `docker compose up -d --build`
 
 ### SSL
 
@@ -183,7 +184,8 @@ When you configure HTTPS (e.g. Certbot, Cloudflare), set `SECURE_COOKIES=true` i
 | `CLOUDINARY_API_KEY` | worker | Cloudinary API key |
 | `CLOUDINARY_API_SECRET` | worker | Cloudinary API secret |
 | `BLOG_ID` | blog | Which blog this deployment serves |
-| `REVALIDATION_SECRET` | blog, worker | Shared secret for ISR cache invalidation |
+| `REVALIDATION_SECRET` | admin, blog, worker | Shared secret for ISR cache invalidation |
+| `BLOG_HOSTS` | admin | Comma-separated blog container hosts for cache revalidation (e.g. `blog:3000,blog2:3000`) |
 
 ## Scripts
 
