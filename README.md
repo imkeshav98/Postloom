@@ -162,8 +162,8 @@ For local testing, add to your hosts file (`C:\Windows\System32\drivers\etc\host
 1. Create the blog in the admin dashboard — note the Blog ID
 2. Duplicate the `blog` service in `docker-compose.yml` with a new name and `BLOG_ID`
 3. Add a matching `server` block in `nginx/default.conf`
-4. Append the new blog host to `BLOG_HOSTS` in the admin service (e.g. `blog:3000,blog2:3000,blog-new:3000`)
-5. `docker compose up -d --build`
+4. Append the new blog host to `BLOG_HOSTS` in `docker-compose.yml` (e.g. `blog:3000,blog2:3000,blog-new:3000`)
+5. `docker compose up -d --build && docker compose restart nginx`
 
 ### SSL
 

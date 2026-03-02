@@ -1,3 +1,5 @@
+name: postloom
+
 services:
   # ─── Database ─────────────────────────────────────────────────────────────
   db:
@@ -49,6 +51,7 @@ services:
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
       REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+      BLOG_HOSTS: blog:3000,blog2:3000
 
   # ─── Blog (default instance) ──────────────────────────────────────────────
   # Duplicate this block for each blog domain. Change BLOG_ID and add a
@@ -95,3 +98,4 @@ services:
 
 volumes:
   pgdata:
+    name: postloom_pgdata

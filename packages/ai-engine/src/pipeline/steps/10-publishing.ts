@@ -51,28 +51,22 @@ async function execute(
 
   console.log(`    [Publishing] Post published: ${input.slug}`);
 
-  // Call revalidation webhook if blog has a domain configured
-  const blog = await prisma.blog.findUnique({
-    where: { id: context.blogId },
-    select: { domain: true },
-  });
-
+  // Revalidate blog cache so the new post appears immediately
   const secret = process.env.REVALIDATION_SECRET;
 
-  if (blog?.domain && secret) {
-    const url = `https://${blog.domain}/api/revalidate?secret=${encodeURIComponent(secret)}&tag=${encodeURIComponent(input.slug)}`;
-    try {
-      const res = await fetch(url, { method: "POST" });
-      if (res.ok) {
-        console.log(`    [Publishing] Revalidation webhook sent to ${blog.domain}`);
-      } else {
-        console.warn(`    [Publishing] Revalidation webhook returned ${res.status} — cache may be stale`);
-      }
-    } catch (err) {
-      console.warn(`    [Publishing] Revalidation webhook failed (${blog.domain}) — blog may not be deployed yet`);
-    }
+  if (secret) {
+    const blogHosts = (process.env.BLOG_HOSTS || "blog:3000").split(",");
+    const tags = ["posts", "blog-config"];
+    await Promise.allSettled(
+      blogHosts.flatMap((host) =>
+        tags.map((tag) =>
+          fetch(`http://${host.trim()}/api/revalidate?secret=${secret}&tag=${tag}`, { method: "POST" })
+        )
+      )
+    );
+    console.log(`    [Publishing] Revalidation sent to ${blogHosts.length} blog host(s)`);
   } else {
-    console.log(`    [Publishing] No domain/secret configured — skipping revalidation webhook`);
+    console.log(`    [Publishing] No REVALIDATION_SECRET — skipping cache revalidation`);
   }
 
   return {

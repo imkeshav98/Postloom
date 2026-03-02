@@ -54,6 +54,9 @@ COPY --from=builder /app/apps/blog/.next/standalone ./
 COPY --from=builder /app/apps/blog/.next/static ./apps/blog/.next/static
 COPY --from=builder /app/apps/blog/public ./apps/blog/public/
 
+# Next.js writes ISR cache at runtime
+RUN mkdir -p /app/apps/blog/.next/cache && chown -R nextjs:nodejs /app/apps/blog/.next/cache
+
 USER nextjs
 
 EXPOSE 3000
